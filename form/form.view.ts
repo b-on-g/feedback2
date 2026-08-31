@@ -95,17 +95,17 @@ namespace $.$$ {
 			// перевесится, и ветка отзывов расщепится у всех остальных. Честнее
 			// ошибка на кнопке — через секунду ленд доедет и повтор пройдёт.
 			if (!dict.can_change()) {
-				return $mol_fail(new Error(`Feedback storage is not ready yet, try again`))
+				return $mol_fail(new Error(this.not_ready()))
 			}
 			return dict.key(this.my_lord(), 'auto') ?? null
 		}
 
 		prompt() {
 			return [
-				'**Tell us what you think:**',
-				'- What did you **like**?',
-				'- What could be done **better**?',
-				'- Any **suggestions** for the future?',
+				this.prompt_title(),
+				this.prompt_like(),
+				this.prompt_better(),
+				this.prompt_future(),
 			].join('\n')
 		}
 
@@ -128,7 +128,7 @@ namespace $.$$ {
 		}
 
 		submit_title() {
-			return this.has_entry() ? 'Update feedback' : 'Send feedback'
+			return this.has_entry() ? this.submit_update() : this.submit_send()
 		}
 
 		// Подвисающие чтения — первыми: land_ensure ниже считает PoW и ретраит
@@ -187,7 +187,7 @@ namespace $.$$ {
 		}
 
 		entry_row_contact(index: number) {
-			return this.entry_by_index(index)?.Contact()?.val() ?? 'Anonymous'
+			return this.entry_by_index(index)?.Contact()?.val() || this.anonymous()
 		}
 
 		entry_row_has_reply(index: number) {
@@ -210,12 +210,12 @@ namespace $.$$ {
 		}
 
 		entry_row_reply_submit_title(index: number) {
-			return this.entry_row_has_reply(index) ? 'Update reply' : 'Send reply'
+			return this.entry_row_has_reply(index) ? this.reply_update() : this.reply_send()
 		}
 
 		entry_row_reply_toggle_title(index: number) {
-			if (this.entry_row_has_reply(index)) return 'Edit reply'
-			return this.entry_row_reply_form_open(index) ? 'Cancel' : 'Reply'
+			if (this.entry_row_has_reply(index)) return this.reply_edit()
+			return this.entry_row_reply_form_open(index) ? this.reply_cancel() : this.reply_open()
 		}
 
 		@$mol_action

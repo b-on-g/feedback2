@@ -3,6 +3,19 @@ $bog_feedback2_form $mol_page
 	feedback_id \
 	registry_link \
 	title @ \Feedback ( one per user )
+	prompt_title @ \**Tell us what you think:**
+	prompt_like @ \- What did you **like**?
+	prompt_better @ \- What could be done **better**?
+	prompt_future @ \- Any **suggestions** for the future?
+	submit_send @ \Send feedback
+	submit_update @ \Update feedback
+	anonymous @ \Anonymous
+	reply_send @ \Send reply
+	reply_update @ \Update reply
+	reply_open @ \Reply
+	reply_cancel @ \Cancel
+	reply_edit @ \Edit reply
+	not_ready @ \Feedback storage is not ready yet, try again
 	tools /
 		<= Close null
 	body /
