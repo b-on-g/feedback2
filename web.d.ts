@@ -96,412 +96,24 @@ declare namespace $ {
 }
 
 declare namespace $ {
-    enum $mol_rest_code {
-        'Continue' = 100,
-        'Switching protocols' = 101,
-        'Processing' = 102,
-        'OK' = 200,
-        'Created' = 201,
-        'Accepted' = 202,
-        'Non-Authoritative Information' = 203,
-        'No Content' = 204,
-        'Reset Content' = 205,
-        'Partial Content' = 206,
-        'Multi Status' = 207,
-        'Already Reported' = 208,
-        'IM Used' = 226,
-        'Multiple Choices' = 300,
-        'Moved Permanently' = 301,
-        'Found' = 302,
-        'See Other' = 303,
-        'Not Modified' = 304,
-        'Use Proxy' = 305,
-        'Temporary Redirect' = 307,
-        'Bad Request' = 400,
-        'Unauthorized' = 401,
-        'Payment Required' = 402,
-        'Forbidden' = 403,
-        'Not Found' = 404,
-        'Method Not Allowed' = 405,
-        'Not Acceptable' = 406,
-        'Proxy Authentication Required' = 407,
-        'Request Timeout' = 408,
-        'Conflict' = 409,
-        'Gone' = 410,
-        'Length Required' = 411,
-        'Precondition Failed' = 412,
-        'Request Entity Too Large' = 413,
-        'Request URI Too Long' = 414,
-        'Unsupported Media Type' = 415,
-        'Requested Range Not Satisfiable' = 416,
-        'Expectation Failed' = 417,
-        'Teapot' = 418,
-        'Unprocessable Entity' = 422,
-        'Locked' = 423,
-        'Failed Dependency' = 424,
-        'Upgrade Required' = 426,
-        'Precondition Required' = 428,
-        'Too Many Requests' = 429,
-        'Request Header Fields Too Large' = 431,
-        'Unavailable For Legal Reasons' = 451,
-        'Internal Server Error' = 500,
-        'Not Implemented' = 501,
-        'Bad Gateway' = 502,
-        'Service Unavailable' = 503,
-        'Gateway Timeout' = 504,
-        'HTTP Version Not Supported' = 505,
-        'Insufficient Storage' = 507,
-        'Loop Detected' = 508,
-        'Not Extended' = 510,
-        'Network Authentication Required' = 511,
-        'Network Read Timeout Error' = 598,
-        'Network Connect Timeout Error' = 599
+    enum $giper_baza_slot_kind {
+        /** Free Unit Slot */
+        free = 0,
+        /** Land header for the following parts. */
+        land = 76,// L
+        /** Unit of data. */
+        sand = 252,
+        /** Rights/Keys sharing. */
+        gift = 253,
+        /** Sign for hash list. */
+        seal = 254,
+        /** Public key. */
+        pass = 255
     }
 }
 
 declare namespace $ {
-    /** Generates unique identifier. */
-    function $mol_guid(length?: number, exists?: (id: string) => boolean): string;
-}
-
-declare namespace $ {
-    /** Special status statuses. */
-    enum $mol_wire_cursor {
-        /** Update required. */
-        stale = -1,
-        /** Some of (transitive) pub update required. */
-        doubt = -2,
-        /** Actual state but may be dropped. */
-        fresh = -3,
-        /** State will never be changed. */
-        final = -4
-    }
-}
-
-declare namespace $ {
-    /**
-     * Collects subscribers in compact array. 28B
-     */
-    class $mol_wire_pub extends Object {
-        constructor(id?: string);
-        [Symbol.toStringTag]: string;
-        data: unknown[];
-        static get [Symbol.species](): ArrayConstructor;
-        /**
-         * Index of first subscriber.
-         */
-        protected sub_from: number;
-        /**
-         * All current subscribers.
-         */
-        get sub_list(): readonly $mol_wire_sub[];
-        /**
-         * Has any subscribers or not.
-         */
-        get sub_empty(): boolean;
-        /**
-         * Subscribe subscriber to this publisher events and return position of subscriber that required to unsubscribe.
-         */
-        sub_on(sub: $mol_wire_pub, pub_pos: number): number;
-        /**
-         * Unsubscribe subscriber from this publisher events by subscriber position provided by `on(pub)`.
-         */
-        sub_off(sub_pos: number): void;
-        /**
-         * Called when last sub was unsubscribed.
-         **/
-        reap(): void;
-        /**
-         * Autowire this publisher with current subscriber.
-         **/
-        promote(): void;
-        /**
-         * Enforce actualization. Should not throw errors.
-         */
-        fresh(): void;
-        /**
-         * Allow to put data to caches in the subtree.
-         */
-        complete(): void;
-        get incompleted(): boolean;
-        /**
-         * Notify subscribers about self changes.
-         */
-        emit(quant?: $mol_wire_cursor): void;
-        /**
-         * Moves peer from one position to another. Doesn't clear data at old position!
-         */
-        peer_move(from_pos: number, to_pos: number): void;
-        /**
-         * Updates self position in the peer.
-         */
-        peer_repos(peer_pos: number, self_pos: number): void;
-    }
-}
-
-declare namespace $ {
-    /** Generic subscriber interface */
-    interface $mol_wire_sub extends $mol_wire_pub {
-        temp: boolean;
-        pub_list: $mol_wire_pub[];
-        /**
-         * Begin auto wire to publishers.
-         * Returns previous auto subscriber that must me transfer to the `end`.
-         */
-        track_on(): $mol_wire_sub | null;
-        /**
-         * Returns next auto wired publisher. It can be easely repormoted.
-         * Or promotes next publisher to auto wire its togeter.
-         * Must be used only between `track_on` and `track_off`.
-         */
-        track_next(pub?: $mol_wire_pub): $mol_wire_pub | null;
-        pub_off(pub_pos: number): void;
-        /**
-         * Unsubscribes from unpromoted publishers.
-         */
-        track_cut(sub: $mol_wire_pub | null): void;
-        /**
-         * Ends auto wire to publishers.
-         */
-        track_off(sub: $mol_wire_pub | null): void;
-        /**
-         * Receive notification about publisher changes.
-         */
-        absorb(quant: $mol_wire_cursor, pos: number): void;
-        /**
-         * Unsubscribes from all publishers.
-         */
-        destructor(): void;
-    }
-}
-
-declare namespace $ {
-    let $mol_wire_auto_sub: $mol_wire_sub | null;
-    /**
-     * When fulfilled, all publishers are promoted to this subscriber on access to its.
-     */
-    function $mol_wire_auto(next?: $mol_wire_sub | null): $mol_wire_sub | null;
-    /**
-     * Affection queue. Used to prevent accidental stack overflow on emit.
-     */
-    const $mol_wire_affected: ($mol_wire_sub | number)[];
-}
-
-declare namespace $ {
-    function $mol_dev_format_register(config: {
-        header: (val: any, config: any) => any;
-        hasBody: (val: any, config: any) => false;
-    } | {
-        header: (val: any, config: any) => any;
-        hasBody: (val: any, config: any) => boolean;
-        body: (val: any, config: any) => any;
-    }): void;
-    const $mol_dev_format_head: unique symbol;
-    const $mol_dev_format_body: unique symbol;
-    function $mol_dev_format_native(obj: any): any[];
-    function $mol_dev_format_auto(obj: any): any[];
-    function $mol_dev_format_element(element: string, style: object, ...content: any[]): any[];
-    let $mol_dev_format_span: (style: object, ...content: any[]) => any[];
-    let $mol_dev_format_div: (style: object, ...content: any[]) => any[];
-    let $mol_dev_format_ol: (style: object, ...content: any[]) => any[];
-    let $mol_dev_format_li: (style: object, ...content: any[]) => any[];
-    let $mol_dev_format_table: (style: object, ...content: any[]) => any[];
-    let $mol_dev_format_tr: (style: object, ...content: any[]) => any[];
-    let $mol_dev_format_td: (style: object, ...content: any[]) => any[];
-    let $mol_dev_format_accent: (...args: any[]) => any[];
-    let $mol_dev_format_strong: (...args: any[]) => any[];
-    let $mol_dev_format_string: (...args: any[]) => any[];
-    let $mol_dev_format_shade: (...args: any[]) => any[];
-    let $mol_dev_format_indent: (...args: any[]) => any[];
-}
-
-declare namespace $ {
-    /**
-     * Publisher that can auto collect other publishers. 32B
-     *
-     * 	P1 P2 P3 P4 S1 S2 S3
-     * 	^           ^
-     * 	pubs_from   subs_from
-     */
-    class $mol_wire_pub_sub extends $mol_wire_pub implements $mol_wire_sub {
-        protected pub_from: number;
-        protected cursor: $mol_wire_cursor;
-        get temp(): boolean;
-        get pub_list(): $mol_wire_pub[];
-        track_on(): $mol_wire_sub | null;
-        promote(): void;
-        track_next(pub?: $mol_wire_pub): $mol_wire_pub | null;
-        track_off(sub: $mol_wire_sub | null): void;
-        pub_off(sub_pos: number): void;
-        destructor(): void;
-        track_cut(): void;
-        complete(): void;
-        complete_pubs(): void;
-        absorb(quant?: $mol_wire_cursor, pos?: number): void;
-        [$mol_dev_format_head](): any[];
-        /**
-         * Is subscribed to any publisher or not.
-         */
-        get pub_empty(): boolean;
-    }
-}
-
-declare namespace $ {
-    class $mol_after_tick extends $mol_object2 {
-        task: () => void;
-        static promise: Promise<void> | null;
-        cancelled: boolean;
-        constructor(task: () => void);
-        destructor(): void;
-    }
-}
-
-declare namespace $ {
-    function $mol_promise_like(val: any): val is Promise<any>;
-}
-
-declare namespace $ {
-    /**
-     * Suspendable task with support both sync/async api.
-     *
-     * 	A1 A2 A3 A4 P1 P2 P3 P4 S1 S2 S3
-     * 	^           ^           ^
-     * 	args_from   pubs_from   subs_from
-     **/
-    abstract class $mol_wire_fiber<Host, Args extends readonly unknown[], Result> extends $mol_wire_pub_sub {
-        readonly task: (this: Host, ...args: Args) => Result;
-        readonly host?: Host | undefined;
-        static warm: boolean;
-        static planning: Set<$mol_wire_fiber<any, any, any>>;
-        static reaping: Set<$mol_wire_fiber<any, any, any>>;
-        static plan_task: $mol_after_tick | null;
-        static plan(): void;
-        static sync(): void;
-        cache: Result | Error | Promise<Result | Error>;
-        get args(): Args;
-        result(): Result | undefined;
-        get incompleted(): boolean;
-        field(): string;
-        constructor(id: string, task: (this: Host, ...args: Args) => Result, host?: Host | undefined, args?: Args);
-        plan(): this;
-        reap(): void;
-        toString(): string;
-        toJSON(): string;
-        [$mol_dev_format_head](): any[];
-        [$mol_dev_format_body](): null;
-        get $(): any;
-        emit(quant?: $mol_wire_cursor): void;
-        fresh(): this | undefined;
-        refresh(): void;
-        abstract put(next: Result | Error | Promise<Result | Error>): Result | Error | Promise<Result | Error>;
-        /**
-         * Synchronous execution. Throws Promise when waits async task (SuspenseAPI provider).
-         * Should be called inside SuspenseAPI consumer (ie fiber).
-         */
-        sync(): Awaited<Result>;
-        /**
-         * Asynchronous execution.
-         * It's SuspenseAPI consumer. So SuspenseAPI providers can be called inside.
-         */
-        async_raw(): Promise<Result>;
-        async(): Promise<Result> & {
-            destructor(): void;
-        };
-        step(): Promise<null>;
-        destructor(): void;
-    }
-}
-
-declare namespace $ {
-    let $mol_compare_deep_cache: WeakMap<any, WeakMap<any, boolean>>;
-    /**
-     * Deeply compares two values. Returns true if equal.
-     * Define `Symbol.toPrimitive` to customize.
-     */
-    function $mol_compare_deep<Value>(left: Value, right: Value): boolean;
-}
-
-declare namespace $ {
-    /** Logger event data */
-    type $mol_log3_event<Fields> = {
-        [key in string]: unknown;
-    } & {
-        /** Time of event creation */
-        time?: string;
-        /** Place of event creation */
-        place: unknown;
-        /** Short description of event */
-        message: string;
-    } & Fields;
-    /** Logger function */
-    type $mol_log3_logger<Fields, Res = void> = (this: $, event: $mol_log3_event<Fields>) => Res;
-    /** Log begin of some task */
-    let $mol_log3_come: $mol_log3_logger<{}>;
-    /** Log end of some task */
-    let $mol_log3_done: $mol_log3_logger<{}>;
-    /** Log error */
-    let $mol_log3_fail: $mol_log3_logger<{}>;
-    /** Log warning message */
-    let $mol_log3_warn: $mol_log3_logger<{
-        hint: string;
-    }>;
-    /** Log some generic event */
-    let $mol_log3_rise: $mol_log3_logger<{}>;
-    /** Log begin of log group, returns func to close group */
-    let $mol_log3_area: $mol_log3_logger<{}, () => void>;
-    /** Log begin of collapsed group only when some logged inside, returns func to close group */
-    function $mol_log3_area_lazy(this: $, event: $mol_log3_event<{}>): () => void;
-    let $mol_log3_stack: (() => void)[];
-}
-
-declare namespace $ {
-    /**
-     * Extracts keys from `Input` which values extends `Upper` and extendable by `Lower`.
-     *
-     * 	type MathConstants = $mol_type_keys_extract< Math , number > // "E" | "PI" ...
-     */
-    type $mol_type_keys_extract<Input, Upper, Lower = never> = {
-        [Field in keyof Input]: unknown extends Input[Field] ? never : Input[Field] extends never ? never : Input[Field] extends Upper ? [
-            Lower
-        ] extends [Input[Field]] ? Field : never : never;
-    }[keyof Input];
-}
-
-declare namespace $ {
-    function $mol_log3_web_make(level: $mol_type_keys_extract<Console, Function>, color: string): (this: $, event: $mol_log3_event<{}>) => () => void;
-}
-
-declare namespace $ {
-    /** One-shot fiber */
-    class $mol_wire_task<Host, Args extends readonly unknown[], Result> extends $mol_wire_fiber<Host, Args, Result> {
-        static getter<Host, Args extends readonly unknown[], Result>(task: (this: Host, ...args: Args) => Result): (host: Host, args: Args) => $mol_wire_task<Host, Args, Result>;
-        get temp(): boolean;
-        complete(): void;
-        put(next: Result | Error | Promise<Result | Error>): Error | Result | Promise<Error | Result>;
-        destructor(): void;
-    }
-}
-
-declare namespace $ {
-    /**
-     * Decorates method to fiber to ensure it is executed only once inside other fiber.
-     */
-    function $mol_wire_method<Host extends object, Args extends readonly any[]>(host: Host, field: PropertyKey, descr?: TypedPropertyDescriptor<(...args: Args) => any>): {
-        value: (this: Host, ...args: Args) => any;
-        enumerable?: boolean;
-        configurable?: boolean;
-        writable?: boolean;
-        get?: (() => (...args: Args) => any) | undefined;
-        set?: ((value: (...args: Args) => any) => void) | undefined;
-    };
-}
-
-declare namespace $ {
-    /**
-     * Decorates method to fiber to ensure it is executed only once inside other fiber from [mol_wire](../wire/README.md)
-     * @see https://mol.hyoo.ru/#!section=docs/=1fcpsq_1wh0h2
-     */
-    let $mol_action: typeof $mol_wire_method;
+    function $mol_base64_encode(src: Uint8Array<ArrayBuffer>): string;
 }
 
 declare namespace $ {
@@ -512,177 +124,7 @@ declare namespace $ {
 }
 
 declare namespace $ {
-    /** Temporary buffer. Recursive usage isn't supported. */
-    function $mol_charset_buffer(size: number): Uint8Array<ArrayBuffer>;
-}
-
-declare namespace $ {
-    function $mol_charset_encode(str: string): Uint8Array<ArrayBuffer>;
-    function $mol_charset_encode_to(str: string, buf: Uint8Array<ArrayBuffer>, from?: number): number;
-    function $mol_charset_encode_size(str: string): number;
-}
-
-declare namespace $ {
     var $mol_dom: typeof globalThis;
-}
-
-declare namespace $ {
-    function $mol_dom_serialize(node: Node): string;
-}
-
-declare namespace $ {
-    type $mol_rest_port_mime_hi = 'text' | 'application' | 'font' | 'audio' | 'video' | 'image' | 'model';
-    type $mol_rest_port_mime = `${$mol_rest_port_mime_hi}/${string}`;
-    class $mol_rest_port extends $mol_object {
-        send_code(code: $mol_rest_code): void;
-        send_type(mime: $mol_rest_port_mime): void;
-        origin(): string;
-        address(): string;
-        send_data(data: null | string | Uint8Array<ArrayBuffer> | Element | object): void;
-        send_nil(): void;
-        send_bin(data: Uint8Array<ArrayBuffer>): void;
-        send_text(data: string): void;
-        send_json(data: object): void;
-        send_dom(data: Element): void;
-        static make<This extends typeof $mol_object>(this: This, config: Partial<InstanceType<This>>): InstanceType<This>;
-    }
-}
-
-declare namespace $ {
-    /** Returns string key for any value. */
-    function $mol_key<Value>(value: Value): string;
-}
-
-declare namespace $ {
-    class $mol_after_frame extends $mol_object2 {
-        task: () => void;
-        static _promise: Promise<void> | null;
-        static get promise(): Promise<void>;
-        cancelled: boolean;
-        promise: Promise<void>;
-        constructor(task: () => void);
-        destructor(): void;
-    }
-}
-
-declare namespace $ {
-    /**
-     * Returns `Tuple` without first element.
-     *
-     * 	$mol_type_tail<[ 1 , 2 , 3 ]> // [ 2, 3 ]
-     */
-    type $mol_type_tail<Tuple extends readonly any[]> = ((...tail: Tuple) => any) extends ((head: any, ...tail: infer Tail) => any) ? Tail : never;
-}
-
-declare namespace $ {
-    /**
-     * Returns last element of `Tuple`.
-     *
-     * 	$mol_type_tail<[ 1 , 2 , 3 ]> // 3
-     */
-    type $mol_type_foot<Tuple extends readonly any[]> = Tuple['length'] extends 0 ? never : Tuple[$mol_type_tail<Tuple>['length']];
-}
-
-declare namespace $ {
-    function $mol_fail_catch(error: unknown): boolean;
-}
-
-declare namespace $ {
-    function $mol_try<Result>(handler: () => Result): Result | Error;
-}
-
-declare namespace $ {
-    function $mol_try_web<Result>(handler2: () => Result): Result | Error;
-}
-
-declare namespace $ {
-    function $mol_fail_log(error: unknown): boolean;
-}
-
-declare namespace $ {
-    /** Long-living fiber. */
-    class $mol_wire_atom<Host, Args extends readonly unknown[], Result> extends $mol_wire_fiber<Host, Args, Result> {
-        static solo<Host, Args extends readonly unknown[], Result>(host: Host, task: (this: Host, ...args: Args) => Result): $mol_wire_atom<Host, Args, Result>;
-        static plex<Host, Args extends readonly unknown[], Result>(host: Host, task: (this: Host, ...args: Args) => Result, key: Args[0]): $mol_wire_atom<Host, Args, Result>;
-        static watching: Set<$mol_wire_atom<any, any, any>>;
-        static watcher: $mol_after_frame | null;
-        static watch(): void;
-        watch(): void;
-        /**
-         * Update atom value through another temp fiber.
-         */
-        resync(args: Args): Error | Result | Promise<Error | Result>;
-        once(): Awaited<Result>;
-        channel(): ((next?: $mol_type_foot<Args>) => Awaited<Result>) & {
-            atom: $mol_wire_atom<Host, Args, Result>;
-        };
-        destructor(): void;
-        put(next: Result | Error | Promise<Result | Error>): Error | Result | Promise<Error | Result>;
-    }
-}
-
-declare namespace $ {
-    /** Decorates solo object channel to [mol_wire_atom](../atom/atom.ts). */
-    export function $mol_wire_solo<Args extends any[]>(host: object, field: string, descr?: TypedPropertyDescriptor<(...args: Args) => any>): TypedPropertyDescriptor<(...args: First_optional<Args>) => any>;
-    type First_optional<Args extends any[]> = Args extends [] ? [] : [Args[0] | undefined, ...$mol_type_tail<Args>];
-    export {};
-}
-
-declare namespace $ {
-    /** Reactive memoizing multiplexed property decorator. */
-    function $mol_wire_plex<Args extends [any, ...any[]]>(host: object, field: string, descr?: TypedPropertyDescriptor<(...args: Args) => any>): {
-        value: (this: typeof host, ...args: Args) => any;
-        enumerable?: boolean;
-        configurable?: boolean;
-        writable?: boolean;
-        get?: (() => (...args: Args) => any) | undefined;
-        set?: ((value: (...args: Args) => any) => void) | undefined;
-    };
-}
-
-declare namespace $ {
-    /**
-     * Reactive memoizing solo property decorator from [mol_wire](../wire/README.md)
-     * @example
-     * '@' $mol_mem
-     * name(next?: string) {
-     * 	return next ?? 'default'
-     * }
-     * @see https://mol.hyoo.ru/#!section=docs/=qxmh6t_sinbmb
-     */
-    let $mol_mem: typeof $mol_wire_solo;
-    /**
-     * Reactive memoizing multiplexed property decorator [mol_wire](../wire/README.md)
-     * @example
-     * '@' $mol_mem_key
-     * name(id: number, next?: string) {
-     *  return next ?? 'default'
-     * }
-     * @see https://mol.hyoo.ru/#!section=docs/=qxmh6t_sinbmb
-     */
-    let $mol_mem_key: typeof $mol_wire_plex;
-}
-
-declare namespace $ {
-    /** Reactive Set */
-    class $mol_wire_set<Value> extends Set<Value> {
-        pub: $mol_wire_pub;
-        has(value: Value): boolean;
-        entries(): SetIterator<[Value, Value]>;
-        keys(): SetIterator<Value>;
-        values(): SetIterator<Value>;
-        forEach(task: (value: Value, value2: Value, set: Set<Value>) => void, self?: any): void;
-        [Symbol.iterator](): SetIterator<Value>;
-        get size(): number;
-        add(value: Value): this;
-        delete(value: Value): boolean;
-        clear(): void;
-        item(val: Value, next?: boolean): boolean;
-    }
-}
-
-declare namespace $ {
-    function $mol_base64_encode(src: Uint8Array<ArrayBuffer>): string;
 }
 
 declare namespace $ {
@@ -700,11 +142,6 @@ declare namespace $ {
 declare namespace $ {
     function $mol_base64_ae_encode(buffer: Uint8Array<ArrayBuffer>): string;
     function $mol_base64_ae_decode(str: string): Uint8Array<ArrayBuffer>;
-}
-
-declare namespace $ {
-    /** Fast small sync SHA-1 (20 bytes, 160 bits) */
-    function $mol_crypto2_hash(input: ArrayBufferView): Uint8Array<ArrayBuffer>;
 }
 
 declare namespace $ {
@@ -747,6 +184,16 @@ declare namespace $ {
 }
 
 declare namespace $ {
+    function $mol_base64_url_encode(buffer: Uint8Array<ArrayBuffer>): string;
+    function $mol_base64_url_decode(str: string): Uint8Array<ArrayBuffer>;
+}
+
+declare namespace $ {
+    function $mol_base64_url_encode_web(buffer: Uint8Array<ArrayBuffer>): string;
+    function $mol_base64_url_decode_web(str: string): Uint8Array<ArrayBuffer>;
+}
+
+declare namespace $ {
     class $mol_wrapper extends $mol_object2 {
         static wrap: (task: (...ags: any[]) => any) => (...ags: any[]) => any;
         static run<Result>(task: () => Result): Result;
@@ -761,6 +208,114 @@ declare namespace $ {
     class $mol_memo extends $mol_wrapper {
         static wrap<This extends object, Value>(task: (this: This, next?: Value) => Value): (this: This, next?: Value) => Value | undefined;
     }
+}
+
+declare namespace $ {
+    /** Base class for crypto keys. */
+    class $mol_crypto2_key extends $mol_buffer {
+        static size_str: number;
+        static size_bin: number;
+        /** Kakes key from different params. */
+        static from<This extends typeof $mol_buffer>(this: This, serial: number | string | ArrayBufferView<ArrayBuffer> | ArrayBuffer): InstanceType<This>;
+        /** Array view of public part. */
+        asArray(): Uint8Array<ArrayBuffer>;
+        /** String representation of public part. */
+        toString(): string;
+    }
+}
+
+declare namespace $ {
+    var $mol_crypto_native: Crypto;
+}
+
+declare namespace $ {
+    /** Derived debuggable error with stack */
+    function $mol_crypto_restack(error: any): never;
+}
+
+declare namespace $ {
+    /** Ed25519 public key for sign verifying. */
+    class $mol_crypto2_auditor extends $mol_crypto2_key {
+        /** Native WebAPI public key. */
+        native(): Promise<CryptoKey>;
+        /** Verifies signature of data. */
+        verify(data: BufferSource, sign: BufferSource): Promise<boolean>;
+    }
+}
+
+declare namespace $ {
+    /** x25519 public key for data encryption. */
+    class $mol_crypto2_socket extends $mol_crypto2_key {
+        /** Native WebAPI public key. */
+        native(): Promise<CryptoKey>;
+    }
+}
+
+declare namespace $ {
+    /** Compose public key for verifying and encryption, based on Curve25519. */
+    class $mol_crypto2_public extends $mol_crypto2_key {
+        static size_str: number;
+        static size_bin: number;
+        /** Return Auditor part. */
+        auditor(): $mol_crypto2_auditor;
+        /** Return Socket part. */
+        socket(): $mol_crypto2_socket;
+        toString(): string;
+    }
+}
+
+declare namespace $ {
+    function $mol_dev_format_register(config: {
+        header: (val: any, config: any) => any;
+        hasBody: (val: any, config: any) => false;
+    } | {
+        header: (val: any, config: any) => any;
+        hasBody: (val: any, config: any) => boolean;
+        body: (val: any, config: any) => any;
+    }): void;
+    const $mol_dev_format_head: unique symbol;
+    const $mol_dev_format_body: unique symbol;
+    function $mol_dev_format_native(obj: any): any[];
+    function $mol_dev_format_auto(obj: any): any[];
+    function $mol_dev_format_element(element: string, style: object, ...content: any[]): any[];
+    let $mol_dev_format_span: (style: object, ...content: any[]) => any[];
+    let $mol_dev_format_div: (style: object, ...content: any[]) => any[];
+    let $mol_dev_format_ol: (style: object, ...content: any[]) => any[];
+    let $mol_dev_format_li: (style: object, ...content: any[]) => any[];
+    let $mol_dev_format_table: (style: object, ...content: any[]) => any[];
+    let $mol_dev_format_tr: (style: object, ...content: any[]) => any[];
+    let $mol_dev_format_td: (style: object, ...content: any[]) => any[];
+    let $mol_dev_format_accent: (...args: any[]) => any[];
+    let $mol_dev_format_strong: (...args: any[]) => any[];
+    let $mol_dev_format_string: (...args: any[]) => any[];
+    let $mol_dev_format_shade: (...args: any[]) => any[];
+    let $mol_dev_format_indent: (...args: any[]) => any[];
+}
+
+declare namespace $ {
+    /** Fast small sync SHA-1 (20 bytes, 160 bits) */
+    function $mol_crypto2_hash(input: ArrayBufferView): Uint8Array<ArrayBuffer>;
+}
+
+declare namespace $ {
+    /** Temporary buffer. Recursive usage isn't supported. */
+    function $mol_charset_buffer(size: number): Uint8Array<ArrayBuffer>;
+}
+
+declare namespace $ {
+    function $mol_charset_encode(str: string): Uint8Array<ArrayBuffer>;
+    function $mol_charset_encode_to(str: string, buf: Uint8Array<ArrayBuffer>, from?: number): number;
+    function $mol_charset_encode_size(str: string): number;
+}
+
+declare namespace $ {
+    /** Generates unique identifier. */
+    function $mol_guid(length?: number, exists?: (id: string) => boolean): string;
+}
+
+declare namespace $ {
+    /** Returns string key for any value. */
+    function $mol_key<Value>(value: Value): string;
 }
 
 declare namespace $ {
@@ -1089,87 +644,6 @@ declare namespace $ {
 }
 
 declare namespace $ {
-    enum $giper_baza_slot_kind {
-        /** Free Unit Slot */
-        free = 0,
-        /** Land header for the following parts. */
-        land = 76,// L
-        /** Unit of data. */
-        sand = 252,
-        /** Rights/Keys sharing. */
-        gift = 253,
-        /** Sign for hash list. */
-        seal = 254,
-        /** Public key. */
-        pass = 255
-    }
-}
-
-declare namespace $ {
-    function $mol_base64_url_encode(buffer: Uint8Array<ArrayBuffer>): string;
-    function $mol_base64_url_decode(str: string): Uint8Array<ArrayBuffer>;
-}
-
-declare namespace $ {
-    function $mol_base64_url_encode_web(buffer: Uint8Array<ArrayBuffer>): string;
-    function $mol_base64_url_decode_web(str: string): Uint8Array<ArrayBuffer>;
-}
-
-declare namespace $ {
-    /** Base class for crypto keys. */
-    class $mol_crypto2_key extends $mol_buffer {
-        static size_str: number;
-        static size_bin: number;
-        /** Kakes key from different params. */
-        static from<This extends typeof $mol_buffer>(this: This, serial: number | string | ArrayBufferView<ArrayBuffer> | ArrayBuffer): InstanceType<This>;
-        /** Array view of public part. */
-        asArray(): Uint8Array<ArrayBuffer>;
-        /** String representation of public part. */
-        toString(): string;
-    }
-}
-
-declare namespace $ {
-    var $mol_crypto_native: Crypto;
-}
-
-declare namespace $ {
-    /** Derived debuggable error with stack */
-    function $mol_crypto_restack(error: any): never;
-}
-
-declare namespace $ {
-    /** Ed25519 public key for sign verifying. */
-    class $mol_crypto2_auditor extends $mol_crypto2_key {
-        /** Native WebAPI public key. */
-        native(): Promise<CryptoKey>;
-        /** Verifies signature of data. */
-        verify(data: BufferSource, sign: BufferSource): Promise<boolean>;
-    }
-}
-
-declare namespace $ {
-    /** x25519 public key for data encryption. */
-    class $mol_crypto2_socket extends $mol_crypto2_key {
-        /** Native WebAPI public key. */
-        native(): Promise<CryptoKey>;
-    }
-}
-
-declare namespace $ {
-    /** Compose public key for verifying and encryption, based on Curve25519. */
-    class $mol_crypto2_public extends $mol_crypto2_key {
-        static size_str: number;
-        static size_bin: number;
-        /** Return Auditor part. */
-        auditor(): $mol_crypto2_auditor;
-        /** Return Socket part. */
-        socket(): $mol_crypto2_socket;
-        toString(): string;
-    }
-}
-
-declare namespace $ {
     /** Ed25519 private key for data signing. */
     class $mol_crypto2_signer extends $mol_crypto2_auditor {
         static size_sign: number;
@@ -1265,6 +739,420 @@ declare namespace $ {
         /** String representation of private part. */
         toStringPrivate(): string;
     }
+}
+
+declare namespace $ {
+    /** Special status statuses. */
+    enum $mol_wire_cursor {
+        /** Update required. */
+        stale = -1,
+        /** Some of (transitive) pub update required. */
+        doubt = -2,
+        /** Actual state but may be dropped. */
+        fresh = -3,
+        /** State will never be changed. */
+        final = -4
+    }
+}
+
+declare namespace $ {
+    /**
+     * Collects subscribers in compact array. 28B
+     */
+    class $mol_wire_pub extends Object {
+        constructor(id?: string);
+        [Symbol.toStringTag]: string;
+        data: unknown[];
+        static get [Symbol.species](): ArrayConstructor;
+        /**
+         * Index of first subscriber.
+         */
+        protected sub_from: number;
+        /**
+         * All current subscribers.
+         */
+        get sub_list(): readonly $mol_wire_sub[];
+        /**
+         * Has any subscribers or not.
+         */
+        get sub_empty(): boolean;
+        /**
+         * Subscribe subscriber to this publisher events and return position of subscriber that required to unsubscribe.
+         */
+        sub_on(sub: $mol_wire_pub, pub_pos: number): number;
+        /**
+         * Unsubscribe subscriber from this publisher events by subscriber position provided by `on(pub)`.
+         */
+        sub_off(sub_pos: number): void;
+        /**
+         * Called when last sub was unsubscribed.
+         **/
+        reap(): void;
+        /**
+         * Autowire this publisher with current subscriber.
+         **/
+        promote(): void;
+        /**
+         * Enforce actualization. Should not throw errors.
+         */
+        fresh(): void;
+        /**
+         * Allow to put data to caches in the subtree.
+         */
+        complete(): void;
+        get incompleted(): boolean;
+        /**
+         * Notify subscribers about self changes.
+         */
+        emit(quant?: $mol_wire_cursor): void;
+        /**
+         * Moves peer from one position to another. Doesn't clear data at old position!
+         */
+        peer_move(from_pos: number, to_pos: number): void;
+        /**
+         * Updates self position in the peer.
+         */
+        peer_repos(peer_pos: number, self_pos: number): void;
+    }
+}
+
+declare namespace $ {
+    /** Generic subscriber interface */
+    interface $mol_wire_sub extends $mol_wire_pub {
+        temp: boolean;
+        pub_list: $mol_wire_pub[];
+        /**
+         * Begin auto wire to publishers.
+         * Returns previous auto subscriber that must me transfer to the `end`.
+         */
+        track_on(): $mol_wire_sub | null;
+        /**
+         * Returns next auto wired publisher. It can be easely repormoted.
+         * Or promotes next publisher to auto wire its togeter.
+         * Must be used only between `track_on` and `track_off`.
+         */
+        track_next(pub?: $mol_wire_pub): $mol_wire_pub | null;
+        pub_off(pub_pos: number): void;
+        /**
+         * Unsubscribes from unpromoted publishers.
+         */
+        track_cut(sub: $mol_wire_pub | null): void;
+        /**
+         * Ends auto wire to publishers.
+         */
+        track_off(sub: $mol_wire_pub | null): void;
+        /**
+         * Receive notification about publisher changes.
+         */
+        absorb(quant: $mol_wire_cursor, pos: number): void;
+        /**
+         * Unsubscribes from all publishers.
+         */
+        destructor(): void;
+    }
+}
+
+declare namespace $ {
+    let $mol_wire_auto_sub: $mol_wire_sub | null;
+    /**
+     * When fulfilled, all publishers are promoted to this subscriber on access to its.
+     */
+    function $mol_wire_auto(next?: $mol_wire_sub | null): $mol_wire_sub | null;
+    /**
+     * Affection queue. Used to prevent accidental stack overflow on emit.
+     */
+    const $mol_wire_affected: ($mol_wire_sub | number)[];
+}
+
+declare namespace $ {
+    /**
+     * Publisher that can auto collect other publishers. 32B
+     *
+     * 	P1 P2 P3 P4 S1 S2 S3
+     * 	^           ^
+     * 	pubs_from   subs_from
+     */
+    class $mol_wire_pub_sub extends $mol_wire_pub implements $mol_wire_sub {
+        protected pub_from: number;
+        protected cursor: $mol_wire_cursor;
+        get temp(): boolean;
+        get pub_list(): $mol_wire_pub[];
+        track_on(): $mol_wire_sub | null;
+        promote(): void;
+        track_next(pub?: $mol_wire_pub): $mol_wire_pub | null;
+        track_off(sub: $mol_wire_sub | null): void;
+        pub_off(sub_pos: number): void;
+        destructor(): void;
+        track_cut(): void;
+        complete(): void;
+        complete_pubs(): void;
+        absorb(quant?: $mol_wire_cursor, pos?: number): void;
+        [$mol_dev_format_head](): any[];
+        /**
+         * Is subscribed to any publisher or not.
+         */
+        get pub_empty(): boolean;
+    }
+}
+
+declare namespace $ {
+    class $mol_after_tick extends $mol_object2 {
+        task: () => void;
+        static promise: Promise<void> | null;
+        cancelled: boolean;
+        constructor(task: () => void);
+        destructor(): void;
+    }
+}
+
+declare namespace $ {
+    function $mol_promise_like(val: any): val is Promise<any>;
+}
+
+declare namespace $ {
+    /**
+     * Suspendable task with support both sync/async api.
+     *
+     * 	A1 A2 A3 A4 P1 P2 P3 P4 S1 S2 S3
+     * 	^           ^           ^
+     * 	args_from   pubs_from   subs_from
+     **/
+    abstract class $mol_wire_fiber<Host, Args extends readonly unknown[], Result> extends $mol_wire_pub_sub {
+        readonly task: (this: Host, ...args: Args) => Result;
+        readonly host?: Host | undefined;
+        static warm: boolean;
+        static planning: Set<$mol_wire_fiber<any, any, any>>;
+        static reaping: Set<$mol_wire_fiber<any, any, any>>;
+        static plan_task: $mol_after_tick | null;
+        static plan(): void;
+        static sync(): void;
+        cache: Result | Error | Promise<Result | Error>;
+        get args(): Args;
+        result(): Result | undefined;
+        get incompleted(): boolean;
+        field(): string;
+        constructor(id: string, task: (this: Host, ...args: Args) => Result, host?: Host | undefined, args?: Args);
+        plan(): this;
+        reap(): void;
+        toString(): string;
+        toJSON(): string;
+        [$mol_dev_format_head](): any[];
+        [$mol_dev_format_body](): null;
+        get $(): any;
+        emit(quant?: $mol_wire_cursor): void;
+        fresh(): this | undefined;
+        refresh(): void;
+        abstract put(next: Result | Error | Promise<Result | Error>): Result | Error | Promise<Result | Error>;
+        /**
+         * Synchronous execution. Throws Promise when waits async task (SuspenseAPI provider).
+         * Should be called inside SuspenseAPI consumer (ie fiber).
+         */
+        sync(): Awaited<Result>;
+        /**
+         * Asynchronous execution.
+         * It's SuspenseAPI consumer. So SuspenseAPI providers can be called inside.
+         */
+        async_raw(): Promise<Result>;
+        async(): Promise<Result> & {
+            destructor(): void;
+        };
+        step(): Promise<null>;
+        destructor(): void;
+    }
+}
+
+declare namespace $ {
+    class $mol_after_frame extends $mol_object2 {
+        task: () => void;
+        static _promise: Promise<void> | null;
+        static get promise(): Promise<void>;
+        cancelled: boolean;
+        promise: Promise<void>;
+        constructor(task: () => void);
+        destructor(): void;
+    }
+}
+
+declare namespace $ {
+    let $mol_compare_deep_cache: WeakMap<any, WeakMap<any, boolean>>;
+    /**
+     * Deeply compares two values. Returns true if equal.
+     * Define `Symbol.toPrimitive` to customize.
+     */
+    function $mol_compare_deep<Value>(left: Value, right: Value): boolean;
+}
+
+declare namespace $ {
+    /** Logger event data */
+    type $mol_log3_event<Fields> = {
+        [key in string]: unknown;
+    } & {
+        /** Time of event creation */
+        time?: string;
+        /** Place of event creation */
+        place: unknown;
+        /** Short description of event */
+        message: string;
+    } & Fields;
+    /** Logger function */
+    type $mol_log3_logger<Fields, Res = void> = (this: $, event: $mol_log3_event<Fields>) => Res;
+    /** Log begin of some task */
+    let $mol_log3_come: $mol_log3_logger<{}>;
+    /** Log end of some task */
+    let $mol_log3_done: $mol_log3_logger<{}>;
+    /** Log error */
+    let $mol_log3_fail: $mol_log3_logger<{}>;
+    /** Log warning message */
+    let $mol_log3_warn: $mol_log3_logger<{
+        hint: string;
+    }>;
+    /** Log some generic event */
+    let $mol_log3_rise: $mol_log3_logger<{}>;
+    /** Log begin of log group, returns func to close group */
+    let $mol_log3_area: $mol_log3_logger<{}, () => void>;
+    /** Log begin of collapsed group only when some logged inside, returns func to close group */
+    function $mol_log3_area_lazy(this: $, event: $mol_log3_event<{}>): () => void;
+    let $mol_log3_stack: (() => void)[];
+}
+
+declare namespace $ {
+    /**
+     * Extracts keys from `Input` which values extends `Upper` and extendable by `Lower`.
+     *
+     * 	type MathConstants = $mol_type_keys_extract< Math , number > // "E" | "PI" ...
+     */
+    type $mol_type_keys_extract<Input, Upper, Lower = never> = {
+        [Field in keyof Input]: unknown extends Input[Field] ? never : Input[Field] extends never ? never : Input[Field] extends Upper ? [
+            Lower
+        ] extends [Input[Field]] ? Field : never : never;
+    }[keyof Input];
+}
+
+declare namespace $ {
+    function $mol_log3_web_make(level: $mol_type_keys_extract<Console, Function>, color: string): (this: $, event: $mol_log3_event<{}>) => () => void;
+}
+
+declare namespace $ {
+    /** One-shot fiber */
+    class $mol_wire_task<Host, Args extends readonly unknown[], Result> extends $mol_wire_fiber<Host, Args, Result> {
+        static getter<Host, Args extends readonly unknown[], Result>(task: (this: Host, ...args: Args) => Result): (host: Host, args: Args) => $mol_wire_task<Host, Args, Result>;
+        get temp(): boolean;
+        complete(): void;
+        put(next: Result | Error | Promise<Result | Error>): Error | Result | Promise<Error | Result>;
+        destructor(): void;
+    }
+}
+
+declare namespace $ {
+    /**
+     * Decorates method to fiber to ensure it is executed only once inside other fiber.
+     */
+    function $mol_wire_method<Host extends object, Args extends readonly any[]>(host: Host, field: PropertyKey, descr?: TypedPropertyDescriptor<(...args: Args) => any>): {
+        value: (this: Host, ...args: Args) => any;
+        enumerable?: boolean;
+        configurable?: boolean;
+        writable?: boolean;
+        get?: (() => (...args: Args) => any) | undefined;
+        set?: ((value: (...args: Args) => any) => void) | undefined;
+    };
+}
+
+declare namespace $ {
+    /**
+     * Returns `Tuple` without first element.
+     *
+     * 	$mol_type_tail<[ 1 , 2 , 3 ]> // [ 2, 3 ]
+     */
+    type $mol_type_tail<Tuple extends readonly any[]> = ((...tail: Tuple) => any) extends ((head: any, ...tail: infer Tail) => any) ? Tail : never;
+}
+
+declare namespace $ {
+    /**
+     * Returns last element of `Tuple`.
+     *
+     * 	$mol_type_tail<[ 1 , 2 , 3 ]> // 3
+     */
+    type $mol_type_foot<Tuple extends readonly any[]> = Tuple['length'] extends 0 ? never : Tuple[$mol_type_tail<Tuple>['length']];
+}
+
+declare namespace $ {
+    function $mol_fail_catch(error: unknown): boolean;
+}
+
+declare namespace $ {
+    function $mol_try<Result>(handler: () => Result): Result | Error;
+}
+
+declare namespace $ {
+    function $mol_try_web<Result>(handler2: () => Result): Result | Error;
+}
+
+declare namespace $ {
+    function $mol_fail_log(error: unknown): boolean;
+}
+
+declare namespace $ {
+    /** Long-living fiber. */
+    class $mol_wire_atom<Host, Args extends readonly unknown[], Result> extends $mol_wire_fiber<Host, Args, Result> {
+        static solo<Host, Args extends readonly unknown[], Result>(host: Host, task: (this: Host, ...args: Args) => Result): $mol_wire_atom<Host, Args, Result>;
+        static plex<Host, Args extends readonly unknown[], Result>(host: Host, task: (this: Host, ...args: Args) => Result, key: Args[0]): $mol_wire_atom<Host, Args, Result>;
+        static watching: Set<$mol_wire_atom<any, any, any>>;
+        static watcher: $mol_after_frame | null;
+        static watch(): void;
+        watch(): void;
+        /**
+         * Update atom value through another temp fiber.
+         */
+        resync(args: Args): Error | Result | Promise<Error | Result>;
+        once(): Awaited<Result>;
+        channel(): ((next?: $mol_type_foot<Args>) => Awaited<Result>) & {
+            atom: $mol_wire_atom<Host, Args, Result>;
+        };
+        destructor(): void;
+        put(next: Result | Error | Promise<Result | Error>): Error | Result | Promise<Error | Result>;
+    }
+}
+
+declare namespace $ {
+    /** Decorates solo object channel to [mol_wire_atom](../atom/atom.ts). */
+    export function $mol_wire_solo<Args extends any[]>(host: object, field: string, descr?: TypedPropertyDescriptor<(...args: Args) => any>): TypedPropertyDescriptor<(...args: First_optional<Args>) => any>;
+    type First_optional<Args extends any[]> = Args extends [] ? [] : [Args[0] | undefined, ...$mol_type_tail<Args>];
+    export {};
+}
+
+declare namespace $ {
+    /** Reactive memoizing multiplexed property decorator. */
+    function $mol_wire_plex<Args extends [any, ...any[]]>(host: object, field: string, descr?: TypedPropertyDescriptor<(...args: Args) => any>): {
+        value: (this: typeof host, ...args: Args) => any;
+        enumerable?: boolean;
+        configurable?: boolean;
+        writable?: boolean;
+        get?: (() => (...args: Args) => any) | undefined;
+        set?: ((value: (...args: Args) => any) => void) | undefined;
+    };
+}
+
+declare namespace $ {
+    /**
+     * Reactive memoizing solo property decorator from [mol_wire](../wire/README.md)
+     * @example
+     * '@' $mol_mem
+     * name(next?: string) {
+     * 	return next ?? 'default'
+     * }
+     * @see https://mol.hyoo.ru/#!section=docs/=qxmh6t_sinbmb
+     */
+    let $mol_mem: typeof $mol_wire_solo;
+    /**
+     * Reactive memoizing multiplexed property decorator [mol_wire](../wire/README.md)
+     * @example
+     * '@' $mol_mem_key
+     * name(id: number, next?: string) {
+     *  return next ?? 'default'
+     * }
+     * @see https://mol.hyoo.ru/#!section=docs/=qxmh6t_sinbmb
+     */
+    let $mol_mem_key: typeof $mol_wire_plex;
 }
 
 declare namespace $ {
@@ -1377,6 +1265,14 @@ declare namespace $ {
 }
 
 declare namespace $ {
+}
+
+declare namespace $ {
+    /**
+     * Decorates method to fiber to ensure it is executed only once inside other fiber from [mol_wire](../wire/README.md)
+     * @see https://mol.hyoo.ru/#!section=docs/=1fcpsq_1wh0h2
+     */
+    let $mol_action: typeof $mol_wire_method;
 }
 
 declare namespace $ {
@@ -2139,6 +2035,10 @@ declare namespace $ {
 }
 
 declare namespace $ {
+    function $mol_dom_serialize(node: Node): string;
+}
+
+declare namespace $ {
     function $mol_dom_parse(text: string, type?: DOMParserSupportedType): Document;
 }
 
@@ -2386,6 +2286,157 @@ declare namespace $ {
         };
         [$mol_dev_format_head](): any[];
     }
+}
+
+declare namespace $ {
+    enum $mol_rest_code {
+        'Continue' = 100,
+        'Switching protocols' = 101,
+        'Processing' = 102,
+        'OK' = 200,
+        'Created' = 201,
+        'Accepted' = 202,
+        'Non-Authoritative Information' = 203,
+        'No Content' = 204,
+        'Reset Content' = 205,
+        'Partial Content' = 206,
+        'Multi Status' = 207,
+        'Already Reported' = 208,
+        'IM Used' = 226,
+        'Multiple Choices' = 300,
+        'Moved Permanently' = 301,
+        'Found' = 302,
+        'See Other' = 303,
+        'Not Modified' = 304,
+        'Use Proxy' = 305,
+        'Temporary Redirect' = 307,
+        'Bad Request' = 400,
+        'Unauthorized' = 401,
+        'Payment Required' = 402,
+        'Forbidden' = 403,
+        'Not Found' = 404,
+        'Method Not Allowed' = 405,
+        'Not Acceptable' = 406,
+        'Proxy Authentication Required' = 407,
+        'Request Timeout' = 408,
+        'Conflict' = 409,
+        'Gone' = 410,
+        'Length Required' = 411,
+        'Precondition Failed' = 412,
+        'Request Entity Too Large' = 413,
+        'Request URI Too Long' = 414,
+        'Unsupported Media Type' = 415,
+        'Requested Range Not Satisfiable' = 416,
+        'Expectation Failed' = 417,
+        'Teapot' = 418,
+        'Unprocessable Entity' = 422,
+        'Locked' = 423,
+        'Failed Dependency' = 424,
+        'Upgrade Required' = 426,
+        'Precondition Required' = 428,
+        'Too Many Requests' = 429,
+        'Request Header Fields Too Large' = 431,
+        'Unavailable For Legal Reasons' = 451,
+        'Internal Server Error' = 500,
+        'Not Implemented' = 501,
+        'Bad Gateway' = 502,
+        'Service Unavailable' = 503,
+        'Gateway Timeout' = 504,
+        'HTTP Version Not Supported' = 505,
+        'Insufficient Storage' = 507,
+        'Loop Detected' = 508,
+        'Not Extended' = 510,
+        'Network Authentication Required' = 511,
+        'Network Read Timeout Error' = 598,
+        'Network Connect Timeout Error' = 599
+    }
+}
+
+declare namespace $ {
+    type $mol_rest_port_mime_hi = 'text' | 'application' | 'font' | 'audio' | 'video' | 'image' | 'model';
+    type $mol_rest_port_mime = `${$mol_rest_port_mime_hi}/${string}`;
+    class $mol_rest_port extends $mol_object {
+        send_code(code: $mol_rest_code): void;
+        send_type(mime: $mol_rest_port_mime): void;
+        origin(): string;
+        address(): string;
+        send_data(data: null | string | Uint8Array<ArrayBuffer> | Element | object): void;
+        send_nil(): void;
+        send_bin(data: Uint8Array<ArrayBuffer>): void;
+        send_text(data: string): void;
+        send_json(data: object): void;
+        send_dom(data: Element): void;
+        static make<This extends typeof $mol_object>(this: This, config: Partial<InstanceType<This>>): InstanceType<This>;
+    }
+}
+
+declare namespace $ {
+    /** Reactive Set */
+    class $mol_wire_set<Value> extends Set<Value> {
+        pub: $mol_wire_pub;
+        has(value: Value): boolean;
+        entries(): SetIterator<[Value, Value]>;
+        keys(): SetIterator<Value>;
+        values(): SetIterator<Value>;
+        forEach(task: (value: Value, value2: Value, set: Set<Value>) => void, self?: any): void;
+        [Symbol.iterator](): SetIterator<Value>;
+        get size(): number;
+        add(value: Value): this;
+        delete(value: Value): boolean;
+        clear(): void;
+        item(val: Value, next?: boolean): boolean;
+    }
+}
+
+declare namespace $ {
+    class $mol_rest_port_ws extends $mol_rest_port {
+    }
+}
+
+declare namespace $ {
+    class $mol_rest_port_ws_std extends $mol_rest_port_ws {
+        socket: WebSocket;
+        origin(): string;
+        send_nil(): void;
+        send_bin(data: Uint8Array<ArrayBuffer>): void;
+        send_text(data: string): void;
+    }
+}
+
+declare namespace $ {
+    /** Glob synchronizer */
+    class $giper_baza_yard extends $mol_object {
+        /** Whole global graph database which contains Lands */
+        glob(): $giper_baza_glob;
+        lands_news: $mol_wire_set<string>;
+        static masters_default: string[];
+        static masters(): string[];
+        master_cursor(next?: number): number;
+        master_current(): string;
+        master_next(): void;
+        reconnects(reset?: null): number;
+        master(): $mol_rest_port | null;
+        slaves: $mol_wire_set<$mol_rest_port>;
+        sync(): void;
+        sync_news(): void;
+        sync_port(): void;
+        sync_port_lands(port: $mol_rest_port): void;
+        ports(): $mol_rest_port[];
+        masters(): $mol_rest_port[];
+        port_lands_active(port: $mol_rest_port): $mol_wire_set<string>;
+        port_lands_passive(port: $mol_rest_port): Set<string>;
+        lands_alive(): $giper_baza_land[];
+        port_income(port: $mol_rest_port, msg: Uint8Array<ArrayBuffer>): void;
+        face_port_sync(port: $mol_rest_port, income: $giper_baza_pack_parts): void;
+        sync_land(land: $giper_baza_link): void;
+        forget_land(land: $giper_baza_land): void;
+        sync_port_land([port, land]: [$mol_rest_port, $giper_baza_link]): void;
+        init_port_land([port, land]: [$mol_rest_port, $giper_baza_link]): void;
+        face_port_land([port, land]: [$mol_rest_port, $giper_baza_link], next?: null | $giper_baza_face_map): $giper_baza_face_map | null;
+    }
+}
+
+declare namespace $ {
 }
 
 declare namespace $ {
@@ -32827,57 +32878,6 @@ declare namespace $ {
 }
 
 declare namespace $ {
-    class $mol_rest_port_ws extends $mol_rest_port {
-    }
-}
-
-declare namespace $ {
-    class $mol_rest_port_ws_std extends $mol_rest_port_ws {
-        socket: WebSocket;
-        origin(): string;
-        send_nil(): void;
-        send_bin(data: Uint8Array<ArrayBuffer>): void;
-        send_text(data: string): void;
-    }
-}
-
-declare namespace $ {
-    /** Glob synchronizer */
-    class $giper_baza_yard extends $mol_object {
-        /** Whole global graph database which contains Lands */
-        glob(): $giper_baza_glob;
-        lands_news: $mol_wire_set<string>;
-        static masters_default: string[];
-        static masters(): string[];
-        master_cursor(next?: number): number;
-        master_current(): string;
-        master_next(): void;
-        reconnects(reset?: null): number;
-        master(): $mol_rest_port | null;
-        slaves: $mol_wire_set<$mol_rest_port>;
-        sync(): void;
-        sync_news(): void;
-        sync_port(): void;
-        sync_port_lands(port: $mol_rest_port): void;
-        ports(): $mol_rest_port[];
-        masters(): $mol_rest_port[];
-        port_lands_active(port: $mol_rest_port): $mol_wire_set<string>;
-        port_lands_passive(port: $mol_rest_port): Set<string>;
-        lands_alive(): $giper_baza_land[];
-        port_income(port: $mol_rest_port, msg: Uint8Array<ArrayBuffer>): void;
-        face_port_sync(port: $mol_rest_port, income: $giper_baza_pack_parts): void;
-        sync_land(land: $giper_baza_link): void;
-        forget_land(land: $giper_baza_land): void;
-        sync_port_land([port, land]: [$mol_rest_port, $giper_baza_link]): void;
-        init_port_land([port, land]: [$mol_rest_port, $giper_baza_link]): void;
-        face_port_land([port, land]: [$mol_rest_port, $giper_baza_link], next?: null | $giper_baza_face_map): $giper_baza_face_map | null;
-    }
-}
-
-declare namespace $ {
-}
-
-declare namespace $ {
     function $mol_style_attach(id: string, text: string): HTMLStyleElement | null;
 }
 
@@ -40805,20 +40805,6 @@ declare namespace $.$$ {
 }
 
 declare namespace $ {
-    /**
-     * Рабочие baza-мастера экосистемы bog. Bundled seed (`giper/baza/dump.baza`)
-     * помнит в том числе мёртвые адреса, поэтому актуальные добавляем явно —
-     * виджет отзывов должен работать в любом приложении без своего boot-кода.
-     *
-     * Имя мастера привязано к IP по схеме `<owner>-<country>-<size>.<IP>.ip.giper.dev`.
-     * Серверы переименованы 25.08.2026, и на 87.120 перед Базой стоит SNI-relay:
-     * запрос с НЕИЗВЕСТНЫМ именем уезжает на подставной сайт и отдаёт чужой
-     * сертификат. Поэтому старое имя `baza.87.120.36.150.ip.giper.dev` не просто
-     * мертво — оно роняет TLS-рукопожатие WebSocket'а, и клиент висит на реконнектах.
-     */
-    export const $bog_feedback2_masters: string[];
-    /** @deprecated Один мастер мало, бери весь список. */
-    export const $bog_feedback2_master: string;
     /**
      * Ленд-реестр: feedback_id → ссылка на ленд с отзывами этого проекта.
      * Пресет `[null, post('just')]` — ленд нового проекта заводит первый

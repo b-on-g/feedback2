@@ -96,67 +96,168 @@ declare namespace $ {
 }
 
 declare namespace $ {
-    enum $mol_rest_code {
-        'Continue' = 100,
-        'Switching protocols' = 101,
-        'Processing' = 102,
-        'OK' = 200,
-        'Created' = 201,
-        'Accepted' = 202,
-        'Non-Authoritative Information' = 203,
-        'No Content' = 204,
-        'Reset Content' = 205,
-        'Partial Content' = 206,
-        'Multi Status' = 207,
-        'Already Reported' = 208,
-        'IM Used' = 226,
-        'Multiple Choices' = 300,
-        'Moved Permanently' = 301,
-        'Found' = 302,
-        'See Other' = 303,
-        'Not Modified' = 304,
-        'Use Proxy' = 305,
-        'Temporary Redirect' = 307,
-        'Bad Request' = 400,
-        'Unauthorized' = 401,
-        'Payment Required' = 402,
-        'Forbidden' = 403,
-        'Not Found' = 404,
-        'Method Not Allowed' = 405,
-        'Not Acceptable' = 406,
-        'Proxy Authentication Required' = 407,
-        'Request Timeout' = 408,
-        'Conflict' = 409,
-        'Gone' = 410,
-        'Length Required' = 411,
-        'Precondition Failed' = 412,
-        'Request Entity Too Large' = 413,
-        'Request URI Too Long' = 414,
-        'Unsupported Media Type' = 415,
-        'Requested Range Not Satisfiable' = 416,
-        'Expectation Failed' = 417,
-        'Teapot' = 418,
-        'Unprocessable Entity' = 422,
-        'Locked' = 423,
-        'Failed Dependency' = 424,
-        'Upgrade Required' = 426,
-        'Precondition Required' = 428,
-        'Too Many Requests' = 429,
-        'Request Header Fields Too Large' = 431,
-        'Unavailable For Legal Reasons' = 451,
-        'Internal Server Error' = 500,
-        'Not Implemented' = 501,
-        'Bad Gateway' = 502,
-        'Service Unavailable' = 503,
-        'Gateway Timeout' = 504,
-        'HTTP Version Not Supported' = 505,
-        'Insufficient Storage' = 507,
-        'Loop Detected' = 508,
-        'Not Extended' = 510,
-        'Network Authentication Required' = 511,
-        'Network Read Timeout Error' = 598,
-        'Network Connect Timeout Error' = 599
+    enum $giper_baza_slot_kind {
+        /** Free Unit Slot */
+        free = 0,
+        /** Land header for the following parts. */
+        land = 76,// L
+        /** Unit of data. */
+        sand = 252,
+        /** Rights/Keys sharing. */
+        gift = 253,
+        /** Sign for hash list. */
+        seal = 254,
+        /** Public key. */
+        pass = 255
     }
+}
+
+declare namespace $ {
+    function $mol_base64_encode(src: Uint8Array<ArrayBuffer>): string;
+}
+
+declare namespace $ {
+    function $mol_base64_encode_node(str: Uint8Array<ArrayBuffer>): string;
+}
+
+declare namespace $ {
+    function $mol_base64_decode(base64: string): Uint8Array<ArrayBuffer>;
+}
+
+declare namespace $ {
+    function $mol_base64_decode_node(base64Str: string): Uint8Array<ArrayBuffer>;
+}
+
+declare namespace $ {
+    function $mol_base64_ae_encode(buffer: Uint8Array<ArrayBuffer>): string;
+    function $mol_base64_ae_decode(str: string): Uint8Array<ArrayBuffer>;
+}
+
+declare namespace $ {
+    class $mol_buffer extends DataView<ArrayBuffer> {
+        [Symbol.toStringTag]: string;
+        static from<This extends typeof $mol_buffer>(this: This, array: number | string | ArrayBufferView<ArrayBuffer> | ArrayBuffer): InstanceType<This>;
+        static toString(): string;
+        getUint48(offset: number, LE?: boolean): number;
+        setUint48(offset: number, value: number, LE?: boolean): void;
+        /** 1-byte signed integer channel for offset. */
+        int8(offset: number, next?: number): number;
+        /** 1-byte unsigned integer channel for offset. */
+        uint8(offset: number, next?: number): number;
+        /** 2-byte signed integer little-endian channel for offset. */
+        int16(offset: number, next?: number): number;
+        /** 2-byte unsigned integer little-endian channel for offset. */
+        uint16(offset: number, next?: number): number;
+        /** 4-byte signed integer little-endian channel for offset. */
+        int32(offset: number, next?: number): number;
+        /** 4-byte unsigned integer little-endian channel for offset. */
+        uint32(offset: number, next?: number): number;
+        /** 8-byte signed integer little-endian channel for offset. */
+        int64(offset: number, next?: bigint): bigint;
+        /** 6-byte unsigned integer little-endian channel for offset. */
+        uint48(offset: number, next?: number): number;
+        /** 8-byte unsigned integer little-endian channel for offset. */
+        uint64(offset: number, next?: bigint): bigint;
+        /** 2-byte float little-endian channel for offset. */
+        float16(offset: number, next?: number): number;
+        /** 4-byte float little-endian channel for offset. */
+        float32(offset: number, next?: number): number;
+        /** 8-byte float little-endian channel for offset. */
+        float64(offset: number, next?: number): number;
+        mix(mixin: Uint8Array<ArrayBuffer>): this;
+        /** A Uint8Array view for the same buffer. */
+        asArray(): Uint8Array<ArrayBuffer>;
+        /** base64ae string from buffer. */
+        toString(): string;
+    }
+}
+
+declare namespace $ {
+    function $mol_base64_url_encode(buffer: Uint8Array<ArrayBuffer>): string;
+    function $mol_base64_url_decode(str: string): Uint8Array<ArrayBuffer>;
+}
+
+declare namespace $ {
+    function $mol_base64_url_encode_node(str: Uint8Array<ArrayBuffer>): string;
+    function $mol_base64_url_decode_node(str: string): Uint8Array<ArrayBuffer>;
+}
+
+declare namespace $ {
+    class $mol_wrapper extends $mol_object2 {
+        static wrap: (task: (...ags: any[]) => any) => (...ags: any[]) => any;
+        static run<Result>(task: () => Result): Result;
+        static func<Args extends any[], Result, Host = void>(func: (this: Host, ...args: Args) => Result): (this: Host, ...args: Args) => Result;
+        static get class(): <Class extends new (...args: any[]) => any>(Class: Class) => Class;
+        static get method(): (obj: object, name: PropertyKey, descr?: TypedPropertyDescriptor<any>) => TypedPropertyDescriptor<any>;
+        static get field(): <Host extends object, Field extends keyof Host, Args extends any[], Result>(obj: Host, name: Field, descr?: TypedPropertyDescriptor<Result>) => TypedPropertyDescriptor<Result>;
+    }
+}
+
+declare namespace $ {
+    class $mol_memo extends $mol_wrapper {
+        static wrap<This extends object, Value>(task: (this: This, next?: Value) => Value): (this: This, next?: Value) => Value | undefined;
+    }
+}
+
+declare namespace $ {
+    /** Base class for crypto keys. */
+    class $mol_crypto2_key extends $mol_buffer {
+        static size_str: number;
+        static size_bin: number;
+        /** Kakes key from different params. */
+        static from<This extends typeof $mol_buffer>(this: This, serial: number | string | ArrayBufferView<ArrayBuffer> | ArrayBuffer): InstanceType<This>;
+        /** Array view of public part. */
+        asArray(): Uint8Array<ArrayBuffer>;
+        /** String representation of public part. */
+        toString(): string;
+    }
+}
+
+declare namespace $ {
+    function $node_internal_check(name: string): boolean;
+}
+
+declare namespace $ {
+    function $mol_promise_like(val: any): val is Promise<any>;
+}
+
+declare namespace $ {
+    function $mol_fail_catch(error: unknown): boolean;
+}
+
+declare namespace $ {
+    function $mol_try<Result>(handler: () => Result): Result | Error;
+}
+
+declare namespace $ {
+    function $mol_fail_log(error: unknown): boolean;
+}
+
+declare namespace $ {
+    function $node_autoinstall(this: typeof $, name: string): void;
+}
+
+interface $node {
+    [key: string]: any;
+}
+declare var $node: $node;
+
+declare namespace $ {
+    class $mol_error_mix<Cause extends {} = {}> extends AggregateError {
+        readonly cause: Cause;
+        name: string;
+        constructor(message: string, cause?: Cause, ...errors: readonly Error[]);
+        static [Symbol.toPrimitive](): string;
+        static toString(): string;
+        static make(...params: ConstructorParameters<typeof $mol_error_mix>): $mol_error_mix<{}>;
+    }
+}
+
+declare namespace $ {
+    function $mol_env(): Record<string, string | undefined>;
+}
+
+declare namespace $ {
 }
 
 declare namespace $ {
@@ -354,10 +455,6 @@ declare namespace $ {
         constructor(task: () => void);
         destructor(): void;
     }
-}
-
-declare namespace $ {
-    function $mol_promise_like(val: any): val is Promise<any>;
 }
 
 declare namespace $ {
@@ -642,75 +739,6 @@ declare namespace $ {
 
 declare namespace $ {
     /**
-     * Decorates method to fiber to ensure it is executed only once inside other fiber.
-     */
-    function $mol_wire_method<Host extends object, Args extends readonly any[]>(host: Host, field: PropertyKey, descr?: TypedPropertyDescriptor<(...args: Args) => any>): {
-        value: (this: Host, ...args: Args) => any;
-        enumerable?: boolean;
-        configurable?: boolean;
-        writable?: boolean;
-        get?: (() => (...args: Args) => any) | undefined;
-        set?: ((value: (...args: Args) => any) => void) | undefined;
-    };
-}
-
-declare namespace $ {
-    /**
-     * Decorates method to fiber to ensure it is executed only once inside other fiber from [mol_wire](../wire/README.md)
-     * @see https://mol.hyoo.ru/#!section=docs/=1fcpsq_1wh0h2
-     */
-    let $mol_action: typeof $mol_wire_method;
-}
-
-declare namespace $ {
-    var $mol_dom_context: typeof globalThis;
-}
-
-declare namespace $ {
-    function $node_internal_check(name: string): boolean;
-}
-
-declare namespace $ {
-    function $mol_fail_catch(error: unknown): boolean;
-}
-
-declare namespace $ {
-    function $mol_try<Result>(handler: () => Result): Result | Error;
-}
-
-declare namespace $ {
-    function $mol_fail_log(error: unknown): boolean;
-}
-
-declare namespace $ {
-    function $node_autoinstall(this: typeof $, name: string): void;
-}
-
-interface $node {
-    [key: string]: any;
-}
-declare var $node: $node;
-
-declare namespace $ {
-    class $mol_error_mix<Cause extends {} = {}> extends AggregateError {
-        readonly cause: Cause;
-        name: string;
-        constructor(message: string, cause?: Cause, ...errors: readonly Error[]);
-        static [Symbol.toPrimitive](): string;
-        static toString(): string;
-        static make(...params: ConstructorParameters<typeof $mol_error_mix>): $mol_error_mix<{}>;
-    }
-}
-
-declare namespace $ {
-    function $mol_env(): Record<string, string | undefined>;
-}
-
-declare namespace $ {
-}
-
-declare namespace $ {
-    /**
      * Convert asynchronous (promise-based) API to synchronous by wrapping function and method calls in a fiber.
      * @see https://mol.hyoo.ru/#!section=docs/=1fcpsq_1wh0h2
      */
@@ -760,6 +788,48 @@ declare namespace $ {
 }
 
 declare namespace $ {
+    var $mol_crypto_native: Crypto;
+}
+
+declare namespace $ {
+    /** Derived debuggable error with stack */
+    function $mol_crypto_restack(error: any): never;
+}
+
+declare namespace $ {
+    /** Ed25519 public key for sign verifying. */
+    class $mol_crypto2_auditor extends $mol_crypto2_key {
+        /** Native WebAPI public key. */
+        native(): Promise<CryptoKey>;
+        /** Verifies signature of data. */
+        verify(data: BufferSource, sign: BufferSource): Promise<boolean>;
+    }
+}
+
+declare namespace $ {
+    /** x25519 public key for data encryption. */
+    class $mol_crypto2_socket extends $mol_crypto2_key {
+        /** Native WebAPI public key. */
+        native(): Promise<CryptoKey>;
+    }
+}
+
+declare namespace $ {
+    /** Compose public key for verifying and encryption, based on Curve25519. */
+    class $mol_crypto2_public extends $mol_crypto2_key {
+        static size_str: number;
+        static size_bin: number;
+        /** Return Auditor part. */
+        auditor(): $mol_crypto2_auditor;
+        /** Return Socket part. */
+        socket(): $mol_crypto2_socket;
+        toString(): string;
+    }
+}
+
+declare namespace $ {
+    /** Fast small sync SHA-1 (20 bytes, 160 bits) */
+    function $mol_crypto2_hash(input: ArrayBufferView): Uint8Array<ArrayBuffer>;
 }
 
 declare namespace $ {
@@ -774,233 +844,8 @@ declare namespace $ {
 }
 
 declare namespace $ {
-    var $mol_dom: typeof globalThis;
-}
-
-declare namespace $ {
-    function $mol_dom_serialize(node: Node): string;
-}
-
-declare namespace $ {
-    type $mol_rest_port_mime_hi = 'text' | 'application' | 'font' | 'audio' | 'video' | 'image' | 'model';
-    type $mol_rest_port_mime = `${$mol_rest_port_mime_hi}/${string}`;
-    class $mol_rest_port extends $mol_object {
-        send_code(code: $mol_rest_code): void;
-        send_type(mime: $mol_rest_port_mime): void;
-        origin(): string;
-        address(): string;
-        send_data(data: null | string | Uint8Array<ArrayBuffer> | Element | object): void;
-        send_nil(): void;
-        send_bin(data: Uint8Array<ArrayBuffer>): void;
-        send_text(data: string): void;
-        send_json(data: object): void;
-        send_dom(data: Element): void;
-        static make<This extends typeof $mol_object>(this: This, config: Partial<InstanceType<This>>): InstanceType<This>;
-    }
-}
-
-declare namespace $ {
     /** Returns string key for any value. */
     function $mol_key<Value>(value: Value): string;
-}
-
-declare namespace $ {
-    class $mol_after_timeout extends $mol_object2 {
-        delay: number;
-        task: () => void;
-        id: any;
-        constructor(delay: number, task: () => void);
-        destructor(): void;
-    }
-}
-
-declare namespace $ {
-    class $mol_after_frame extends $mol_after_timeout {
-        task: () => void;
-        constructor(task: () => void);
-    }
-}
-
-declare namespace $ {
-    /**
-     * Returns `Tuple` without first element.
-     *
-     * 	$mol_type_tail<[ 1 , 2 , 3 ]> // [ 2, 3 ]
-     */
-    type $mol_type_tail<Tuple extends readonly any[]> = ((...tail: Tuple) => any) extends ((head: any, ...tail: infer Tail) => any) ? Tail : never;
-}
-
-declare namespace $ {
-    /**
-     * Returns last element of `Tuple`.
-     *
-     * 	$mol_type_tail<[ 1 , 2 , 3 ]> // 3
-     */
-    type $mol_type_foot<Tuple extends readonly any[]> = Tuple['length'] extends 0 ? never : Tuple[$mol_type_tail<Tuple>['length']];
-}
-
-declare namespace $ {
-    /** Long-living fiber. */
-    class $mol_wire_atom<Host, Args extends readonly unknown[], Result> extends $mol_wire_fiber<Host, Args, Result> {
-        static solo<Host, Args extends readonly unknown[], Result>(host: Host, task: (this: Host, ...args: Args) => Result): $mol_wire_atom<Host, Args, Result>;
-        static plex<Host, Args extends readonly unknown[], Result>(host: Host, task: (this: Host, ...args: Args) => Result, key: Args[0]): $mol_wire_atom<Host, Args, Result>;
-        static watching: Set<$mol_wire_atom<any, any, any>>;
-        static watcher: $mol_after_frame | null;
-        static watch(): void;
-        watch(): void;
-        /**
-         * Update atom value through another temp fiber.
-         */
-        resync(args: Args): Error | Result | Promise<Error | Result>;
-        once(): Awaited<Result>;
-        channel(): ((next?: $mol_type_foot<Args>) => Awaited<Result>) & {
-            atom: $mol_wire_atom<Host, Args, Result>;
-        };
-        destructor(): void;
-        put(next: Result | Error | Promise<Result | Error>): Error | Result | Promise<Error | Result>;
-    }
-}
-
-declare namespace $ {
-    /** Decorates solo object channel to [mol_wire_atom](../atom/atom.ts). */
-    export function $mol_wire_solo<Args extends any[]>(host: object, field: string, descr?: TypedPropertyDescriptor<(...args: Args) => any>): TypedPropertyDescriptor<(...args: First_optional<Args>) => any>;
-    type First_optional<Args extends any[]> = Args extends [] ? [] : [Args[0] | undefined, ...$mol_type_tail<Args>];
-    export {};
-}
-
-declare namespace $ {
-    /** Reactive memoizing multiplexed property decorator. */
-    function $mol_wire_plex<Args extends [any, ...any[]]>(host: object, field: string, descr?: TypedPropertyDescriptor<(...args: Args) => any>): {
-        value: (this: typeof host, ...args: Args) => any;
-        enumerable?: boolean;
-        configurable?: boolean;
-        writable?: boolean;
-        get?: (() => (...args: Args) => any) | undefined;
-        set?: ((value: (...args: Args) => any) => void) | undefined;
-    };
-}
-
-declare namespace $ {
-    /**
-     * Reactive memoizing solo property decorator from [mol_wire](../wire/README.md)
-     * @example
-     * '@' $mol_mem
-     * name(next?: string) {
-     * 	return next ?? 'default'
-     * }
-     * @see https://mol.hyoo.ru/#!section=docs/=qxmh6t_sinbmb
-     */
-    let $mol_mem: typeof $mol_wire_solo;
-    /**
-     * Reactive memoizing multiplexed property decorator [mol_wire](../wire/README.md)
-     * @example
-     * '@' $mol_mem_key
-     * name(id: number, next?: string) {
-     *  return next ?? 'default'
-     * }
-     * @see https://mol.hyoo.ru/#!section=docs/=qxmh6t_sinbmb
-     */
-    let $mol_mem_key: typeof $mol_wire_plex;
-}
-
-declare namespace $ {
-    /** Reactive Set */
-    class $mol_wire_set<Value> extends Set<Value> {
-        pub: $mol_wire_pub;
-        has(value: Value): boolean;
-        entries(): SetIterator<[Value, Value]>;
-        keys(): SetIterator<Value>;
-        values(): SetIterator<Value>;
-        forEach(task: (value: Value, value2: Value, set: Set<Value>) => void, self?: any): void;
-        [Symbol.iterator](): SetIterator<Value>;
-        get size(): number;
-        add(value: Value): this;
-        delete(value: Value): boolean;
-        clear(): void;
-        item(val: Value, next?: boolean): boolean;
-    }
-}
-
-declare namespace $ {
-    function $mol_base64_encode(src: Uint8Array<ArrayBuffer>): string;
-}
-
-declare namespace $ {
-    function $mol_base64_encode_node(str: Uint8Array<ArrayBuffer>): string;
-}
-
-declare namespace $ {
-    function $mol_base64_decode(base64: string): Uint8Array<ArrayBuffer>;
-}
-
-declare namespace $ {
-    function $mol_base64_decode_node(base64Str: string): Uint8Array<ArrayBuffer>;
-}
-
-declare namespace $ {
-    function $mol_base64_ae_encode(buffer: Uint8Array<ArrayBuffer>): string;
-    function $mol_base64_ae_decode(str: string): Uint8Array<ArrayBuffer>;
-}
-
-declare namespace $ {
-    /** Fast small sync SHA-1 (20 bytes, 160 bits) */
-    function $mol_crypto2_hash(input: ArrayBufferView): Uint8Array<ArrayBuffer>;
-}
-
-declare namespace $ {
-    class $mol_buffer extends DataView<ArrayBuffer> {
-        [Symbol.toStringTag]: string;
-        static from<This extends typeof $mol_buffer>(this: This, array: number | string | ArrayBufferView<ArrayBuffer> | ArrayBuffer): InstanceType<This>;
-        static toString(): string;
-        getUint48(offset: number, LE?: boolean): number;
-        setUint48(offset: number, value: number, LE?: boolean): void;
-        /** 1-byte signed integer channel for offset. */
-        int8(offset: number, next?: number): number;
-        /** 1-byte unsigned integer channel for offset. */
-        uint8(offset: number, next?: number): number;
-        /** 2-byte signed integer little-endian channel for offset. */
-        int16(offset: number, next?: number): number;
-        /** 2-byte unsigned integer little-endian channel for offset. */
-        uint16(offset: number, next?: number): number;
-        /** 4-byte signed integer little-endian channel for offset. */
-        int32(offset: number, next?: number): number;
-        /** 4-byte unsigned integer little-endian channel for offset. */
-        uint32(offset: number, next?: number): number;
-        /** 8-byte signed integer little-endian channel for offset. */
-        int64(offset: number, next?: bigint): bigint;
-        /** 6-byte unsigned integer little-endian channel for offset. */
-        uint48(offset: number, next?: number): number;
-        /** 8-byte unsigned integer little-endian channel for offset. */
-        uint64(offset: number, next?: bigint): bigint;
-        /** 2-byte float little-endian channel for offset. */
-        float16(offset: number, next?: number): number;
-        /** 4-byte float little-endian channel for offset. */
-        float32(offset: number, next?: number): number;
-        /** 8-byte float little-endian channel for offset. */
-        float64(offset: number, next?: number): number;
-        mix(mixin: Uint8Array<ArrayBuffer>): this;
-        /** A Uint8Array view for the same buffer. */
-        asArray(): Uint8Array<ArrayBuffer>;
-        /** base64ae string from buffer. */
-        toString(): string;
-    }
-}
-
-declare namespace $ {
-    class $mol_wrapper extends $mol_object2 {
-        static wrap: (task: (...ags: any[]) => any) => (...ags: any[]) => any;
-        static run<Result>(task: () => Result): Result;
-        static func<Args extends any[], Result, Host = void>(func: (this: Host, ...args: Args) => Result): (this: Host, ...args: Args) => Result;
-        static get class(): <Class extends new (...args: any[]) => any>(Class: Class) => Class;
-        static get method(): (obj: object, name: PropertyKey, descr?: TypedPropertyDescriptor<any>) => TypedPropertyDescriptor<any>;
-        static get field(): <Host extends object, Field extends keyof Host, Args extends any[], Result>(obj: Host, name: Field, descr?: TypedPropertyDescriptor<Result>) => TypedPropertyDescriptor<Result>;
-    }
-}
-
-declare namespace $ {
-    class $mol_memo extends $mol_wrapper {
-        static wrap<This extends object, Value>(task: (this: This, next?: Value) => Value): (this: This, next?: Value) => Value | undefined;
-    }
 }
 
 declare namespace $ {
@@ -1329,87 +1174,6 @@ declare namespace $ {
 }
 
 declare namespace $ {
-    enum $giper_baza_slot_kind {
-        /** Free Unit Slot */
-        free = 0,
-        /** Land header for the following parts. */
-        land = 76,// L
-        /** Unit of data. */
-        sand = 252,
-        /** Rights/Keys sharing. */
-        gift = 253,
-        /** Sign for hash list. */
-        seal = 254,
-        /** Public key. */
-        pass = 255
-    }
-}
-
-declare namespace $ {
-    function $mol_base64_url_encode(buffer: Uint8Array<ArrayBuffer>): string;
-    function $mol_base64_url_decode(str: string): Uint8Array<ArrayBuffer>;
-}
-
-declare namespace $ {
-    function $mol_base64_url_encode_node(str: Uint8Array<ArrayBuffer>): string;
-    function $mol_base64_url_decode_node(str: string): Uint8Array<ArrayBuffer>;
-}
-
-declare namespace $ {
-    /** Base class for crypto keys. */
-    class $mol_crypto2_key extends $mol_buffer {
-        static size_str: number;
-        static size_bin: number;
-        /** Kakes key from different params. */
-        static from<This extends typeof $mol_buffer>(this: This, serial: number | string | ArrayBufferView<ArrayBuffer> | ArrayBuffer): InstanceType<This>;
-        /** Array view of public part. */
-        asArray(): Uint8Array<ArrayBuffer>;
-        /** String representation of public part. */
-        toString(): string;
-    }
-}
-
-declare namespace $ {
-    var $mol_crypto_native: Crypto;
-}
-
-declare namespace $ {
-    /** Derived debuggable error with stack */
-    function $mol_crypto_restack(error: any): never;
-}
-
-declare namespace $ {
-    /** Ed25519 public key for sign verifying. */
-    class $mol_crypto2_auditor extends $mol_crypto2_key {
-        /** Native WebAPI public key. */
-        native(): Promise<CryptoKey>;
-        /** Verifies signature of data. */
-        verify(data: BufferSource, sign: BufferSource): Promise<boolean>;
-    }
-}
-
-declare namespace $ {
-    /** x25519 public key for data encryption. */
-    class $mol_crypto2_socket extends $mol_crypto2_key {
-        /** Native WebAPI public key. */
-        native(): Promise<CryptoKey>;
-    }
-}
-
-declare namespace $ {
-    /** Compose public key for verifying and encryption, based on Curve25519. */
-    class $mol_crypto2_public extends $mol_crypto2_key {
-        static size_str: number;
-        static size_bin: number;
-        /** Return Auditor part. */
-        auditor(): $mol_crypto2_auditor;
-        /** Return Socket part. */
-        socket(): $mol_crypto2_socket;
-        toString(): string;
-    }
-}
-
-declare namespace $ {
     /** Ed25519 private key for data signing. */
     class $mol_crypto2_signer extends $mol_crypto2_auditor {
         static size_sign: number;
@@ -1508,10 +1272,130 @@ declare namespace $ {
 }
 
 declare namespace $ {
+    class $mol_after_timeout extends $mol_object2 {
+        delay: number;
+        task: () => void;
+        id: any;
+        constructor(delay: number, task: () => void);
+        destructor(): void;
+    }
+}
+
+declare namespace $ {
+    class $mol_after_frame extends $mol_after_timeout {
+        task: () => void;
+        constructor(task: () => void);
+    }
+}
+
+declare namespace $ {
+    /**
+     * Decorates method to fiber to ensure it is executed only once inside other fiber.
+     */
+    function $mol_wire_method<Host extends object, Args extends readonly any[]>(host: Host, field: PropertyKey, descr?: TypedPropertyDescriptor<(...args: Args) => any>): {
+        value: (this: Host, ...args: Args) => any;
+        enumerable?: boolean;
+        configurable?: boolean;
+        writable?: boolean;
+        get?: (() => (...args: Args) => any) | undefined;
+        set?: ((value: (...args: Args) => any) => void) | undefined;
+    };
+}
+
+declare namespace $ {
+    /**
+     * Returns `Tuple` without first element.
+     *
+     * 	$mol_type_tail<[ 1 , 2 , 3 ]> // [ 2, 3 ]
+     */
+    type $mol_type_tail<Tuple extends readonly any[]> = ((...tail: Tuple) => any) extends ((head: any, ...tail: infer Tail) => any) ? Tail : never;
+}
+
+declare namespace $ {
+    /**
+     * Returns last element of `Tuple`.
+     *
+     * 	$mol_type_tail<[ 1 , 2 , 3 ]> // 3
+     */
+    type $mol_type_foot<Tuple extends readonly any[]> = Tuple['length'] extends 0 ? never : Tuple[$mol_type_tail<Tuple>['length']];
+}
+
+declare namespace $ {
+    /** Long-living fiber. */
+    class $mol_wire_atom<Host, Args extends readonly unknown[], Result> extends $mol_wire_fiber<Host, Args, Result> {
+        static solo<Host, Args extends readonly unknown[], Result>(host: Host, task: (this: Host, ...args: Args) => Result): $mol_wire_atom<Host, Args, Result>;
+        static plex<Host, Args extends readonly unknown[], Result>(host: Host, task: (this: Host, ...args: Args) => Result, key: Args[0]): $mol_wire_atom<Host, Args, Result>;
+        static watching: Set<$mol_wire_atom<any, any, any>>;
+        static watcher: $mol_after_frame | null;
+        static watch(): void;
+        watch(): void;
+        /**
+         * Update atom value through another temp fiber.
+         */
+        resync(args: Args): Error | Result | Promise<Error | Result>;
+        once(): Awaited<Result>;
+        channel(): ((next?: $mol_type_foot<Args>) => Awaited<Result>) & {
+            atom: $mol_wire_atom<Host, Args, Result>;
+        };
+        destructor(): void;
+        put(next: Result | Error | Promise<Result | Error>): Error | Result | Promise<Error | Result>;
+    }
+}
+
+declare namespace $ {
+    /** Decorates solo object channel to [mol_wire_atom](../atom/atom.ts). */
+    export function $mol_wire_solo<Args extends any[]>(host: object, field: string, descr?: TypedPropertyDescriptor<(...args: Args) => any>): TypedPropertyDescriptor<(...args: First_optional<Args>) => any>;
+    type First_optional<Args extends any[]> = Args extends [] ? [] : [Args[0] | undefined, ...$mol_type_tail<Args>];
+    export {};
+}
+
+declare namespace $ {
+    /** Reactive memoizing multiplexed property decorator. */
+    function $mol_wire_plex<Args extends [any, ...any[]]>(host: object, field: string, descr?: TypedPropertyDescriptor<(...args: Args) => any>): {
+        value: (this: typeof host, ...args: Args) => any;
+        enumerable?: boolean;
+        configurable?: boolean;
+        writable?: boolean;
+        get?: (() => (...args: Args) => any) | undefined;
+        set?: ((value: (...args: Args) => any) => void) | undefined;
+    };
+}
+
+declare namespace $ {
+    /**
+     * Reactive memoizing solo property decorator from [mol_wire](../wire/README.md)
+     * @example
+     * '@' $mol_mem
+     * name(next?: string) {
+     * 	return next ?? 'default'
+     * }
+     * @see https://mol.hyoo.ru/#!section=docs/=qxmh6t_sinbmb
+     */
+    let $mol_mem: typeof $mol_wire_solo;
+    /**
+     * Reactive memoizing multiplexed property decorator [mol_wire](../wire/README.md)
+     * @example
+     * '@' $mol_mem_key
+     * name(id: number, next?: string) {
+     *  return next ?? 'default'
+     * }
+     * @see https://mol.hyoo.ru/#!section=docs/=qxmh6t_sinbmb
+     */
+    let $mol_mem_key: typeof $mol_wire_plex;
+}
+
+declare namespace $ {
     /**
      * Disable reaping of current subscriber
      */
     function $mol_wire_solid(): void;
+}
+
+declare namespace $ {
+    var $mol_dom_context: typeof globalThis;
+}
+
+declare namespace $ {
 }
 
 declare namespace $ {
@@ -1581,6 +1465,14 @@ declare namespace $ {
         (): Value;
         '()': Value;
     };
+}
+
+declare namespace $ {
+    /**
+     * Decorates method to fiber to ensure it is executed only once inside other fiber from [mol_wire](../wire/README.md)
+     * @see https://mol.hyoo.ru/#!section=docs/=1fcpsq_1wh0h2
+     */
+    let $mol_action: typeof $mol_wire_method;
 }
 
 declare namespace $ {
@@ -1764,6 +1656,10 @@ declare namespace $ {
             start?: number;
         }): WritableStream<Uint8Array<ArrayBuffer>>;
     }
+}
+
+declare namespace $ {
+    var $mol_dom: typeof globalThis;
 }
 
 declare namespace $ {
@@ -2347,6 +2243,10 @@ declare namespace $ {
 }
 
 declare namespace $ {
+    function $mol_dom_serialize(node: Node): string;
+}
+
+declare namespace $ {
     function $mol_dom_parse(text: string, type?: DOMParserSupportedType): Document;
 }
 
@@ -2571,6 +2471,249 @@ declare namespace $ {
             units: $giper_baza_unit_base[];
         };
         [$mol_dev_format_head](): any[];
+    }
+}
+
+declare namespace $ {
+    enum $mol_rest_code {
+        'Continue' = 100,
+        'Switching protocols' = 101,
+        'Processing' = 102,
+        'OK' = 200,
+        'Created' = 201,
+        'Accepted' = 202,
+        'Non-Authoritative Information' = 203,
+        'No Content' = 204,
+        'Reset Content' = 205,
+        'Partial Content' = 206,
+        'Multi Status' = 207,
+        'Already Reported' = 208,
+        'IM Used' = 226,
+        'Multiple Choices' = 300,
+        'Moved Permanently' = 301,
+        'Found' = 302,
+        'See Other' = 303,
+        'Not Modified' = 304,
+        'Use Proxy' = 305,
+        'Temporary Redirect' = 307,
+        'Bad Request' = 400,
+        'Unauthorized' = 401,
+        'Payment Required' = 402,
+        'Forbidden' = 403,
+        'Not Found' = 404,
+        'Method Not Allowed' = 405,
+        'Not Acceptable' = 406,
+        'Proxy Authentication Required' = 407,
+        'Request Timeout' = 408,
+        'Conflict' = 409,
+        'Gone' = 410,
+        'Length Required' = 411,
+        'Precondition Failed' = 412,
+        'Request Entity Too Large' = 413,
+        'Request URI Too Long' = 414,
+        'Unsupported Media Type' = 415,
+        'Requested Range Not Satisfiable' = 416,
+        'Expectation Failed' = 417,
+        'Teapot' = 418,
+        'Unprocessable Entity' = 422,
+        'Locked' = 423,
+        'Failed Dependency' = 424,
+        'Upgrade Required' = 426,
+        'Precondition Required' = 428,
+        'Too Many Requests' = 429,
+        'Request Header Fields Too Large' = 431,
+        'Unavailable For Legal Reasons' = 451,
+        'Internal Server Error' = 500,
+        'Not Implemented' = 501,
+        'Bad Gateway' = 502,
+        'Service Unavailable' = 503,
+        'Gateway Timeout' = 504,
+        'HTTP Version Not Supported' = 505,
+        'Insufficient Storage' = 507,
+        'Loop Detected' = 508,
+        'Not Extended' = 510,
+        'Network Authentication Required' = 511,
+        'Network Read Timeout Error' = 598,
+        'Network Connect Timeout Error' = 599
+    }
+}
+
+declare namespace $ {
+    type $mol_rest_port_mime_hi = 'text' | 'application' | 'font' | 'audio' | 'video' | 'image' | 'model';
+    type $mol_rest_port_mime = `${$mol_rest_port_mime_hi}/${string}`;
+    class $mol_rest_port extends $mol_object {
+        send_code(code: $mol_rest_code): void;
+        send_type(mime: $mol_rest_port_mime): void;
+        origin(): string;
+        address(): string;
+        send_data(data: null | string | Uint8Array<ArrayBuffer> | Element | object): void;
+        send_nil(): void;
+        send_bin(data: Uint8Array<ArrayBuffer>): void;
+        send_text(data: string): void;
+        send_json(data: object): void;
+        send_dom(data: Element): void;
+        static make<This extends typeof $mol_object>(this: This, config: Partial<InstanceType<This>>): InstanceType<This>;
+    }
+}
+
+declare namespace $ {
+    /** Reactive Set */
+    class $mol_wire_set<Value> extends Set<Value> {
+        pub: $mol_wire_pub;
+        has(value: Value): boolean;
+        entries(): SetIterator<[Value, Value]>;
+        keys(): SetIterator<Value>;
+        values(): SetIterator<Value>;
+        forEach(task: (value: Value, value2: Value, set: Set<Value>) => void, self?: any): void;
+        [Symbol.iterator](): SetIterator<Value>;
+        get size(): number;
+        add(value: Value): this;
+        delete(value: Value): boolean;
+        clear(): void;
+        item(val: Value, next?: boolean): boolean;
+    }
+}
+
+declare namespace $ {
+    class $mol_rest_port_ws extends $mol_rest_port {
+    }
+}
+
+declare namespace $ {
+    class $mol_rest_message extends $mol_object {
+        port: $mol_rest_port;
+        method(): string;
+        uri(): URL;
+        type(): $mol_rest_port_mime;
+        origin(): string;
+        address(): string;
+        protocols(): readonly string[];
+        data(): null | string | Uint8Array<ArrayBuffer> | Element | object;
+        bin(): Uint8Array<ArrayBuffer>;
+        text(): string;
+        reply(data: null | string | Uint8Array<ArrayBuffer> | Element | object, meta?: {
+            type?: $mol_rest_port_mime;
+            code?: $mol_rest_code;
+        }): void;
+        route(uri: URL): $mol_rest_message;
+        derive(method: string, data: null | string | Uint8Array<ArrayBuffer> | Element | object, type?: $mol_rest_port_mime): $mol_rest_message;
+        static make<This extends typeof $mol_object>(this: This, config: Partial<InstanceType<This>>): InstanceType<This>;
+    }
+}
+
+declare namespace $ {
+    class $mol_rest_message_http extends $mol_rest_message {
+        input: InstanceType<$node['http']['IncomingMessage']>;
+        method(): string;
+        uri(): URL;
+        type(): $mol_rest_port_mime;
+        origin(): string;
+        address(): string;
+        protocols(): string[];
+        data(): null | string | Uint8Array<ArrayBuffer> | Element | object;
+        route(uri: URL): $mol_rest_message_http;
+    }
+}
+
+declare namespace $ {
+    enum $mol_websocket_frame_op {
+        con = 0,
+        txt = 1,
+        bin = 2,
+        stop = 8,
+        ping = 9,
+        pong = 10
+    }
+    /**
+     * WebSocket frame header.
+     * https://datatracker.ietf.org/doc/html/rfc6455#section-5.2
+     * Payload >= 2^32 isn't supported
+     */
+    class $mol_websocket_frame extends $mol_buffer {
+        /** Kind of socket frame. */
+        kind(next?: {
+            op: keyof typeof $mol_websocket_frame_op;
+            fin: boolean;
+        }): {
+            op: keyof typeof $mol_websocket_frame_op;
+            fin: boolean;
+        } | {
+            op: "stop" | "con" | "txt" | "bin" | "ping" | "pong";
+            fin: number;
+        };
+        /** Payload info. */
+        data(next?: {
+            size: number;
+            mask: boolean;
+        }): {
+            size: number;
+            mask: boolean;
+        } | {
+            size: number;
+            mask: number;
+        };
+        /** Header size (2..14). */
+        size(): number;
+        /** 4 byte mask. */
+        mask(): Uint8Array<ArrayBuffer>;
+        toString(): string;
+        static make(op: keyof typeof $mol_websocket_frame_op, size?: number, mask?: boolean, fin?: boolean): $mol_websocket_frame;
+    }
+}
+
+declare namespace $ {
+    class $mol_rest_port_ws_std extends $mol_rest_port_ws {
+        socket: WebSocket;
+        origin(): string;
+        send_nil(): void;
+        send_bin(data: Uint8Array<ArrayBuffer>): void;
+        send_text(data: string): void;
+    }
+}
+
+declare namespace $ {
+    class $mol_rest_port_ws_node extends $mol_rest_port_ws {
+        prolog: InstanceType<$node['http']['IncomingMessage']>;
+        socket: InstanceType<$node['stream']['Duplex']>;
+        upgrade(): $mol_rest_message_http;
+        origin(): string;
+        address(): string;
+        send_nil(): void;
+        send_bin(data: Uint8Array<ArrayBuffer>): void;
+        send_text(data: string): void;
+    }
+}
+
+declare namespace $ {
+    /** Glob synchronizer */
+    class $giper_baza_yard extends $mol_object {
+        /** Whole global graph database which contains Lands */
+        glob(): $giper_baza_glob;
+        lands_news: $mol_wire_set<string>;
+        static masters_default: string[];
+        static masters(): string[];
+        master_cursor(next?: number): number;
+        master_current(): string;
+        master_next(): void;
+        reconnects(reset?: null): number;
+        master(): $mol_rest_port | null;
+        slaves: $mol_wire_set<$mol_rest_port>;
+        sync(): void;
+        sync_news(): void;
+        sync_port(): void;
+        sync_port_lands(port: $mol_rest_port): void;
+        ports(): $mol_rest_port[];
+        masters(): $mol_rest_port[];
+        port_lands_active(port: $mol_rest_port): $mol_wire_set<string>;
+        port_lands_passive(port: $mol_rest_port): Set<string>;
+        lands_alive(): $giper_baza_land[];
+        port_income(port: $mol_rest_port, msg: Uint8Array<ArrayBuffer>): void;
+        face_port_sync(port: $mol_rest_port, income: $giper_baza_pack_parts): void;
+        sync_land(land: $giper_baza_link): void;
+        forget_land(land: $giper_baza_land): void;
+        sync_port_land([port, land]: [$mol_rest_port, $giper_baza_link]): void;
+        init_port_land([port, land]: [$mol_rest_port, $giper_baza_link]): void;
+        face_port_land([port, land]: [$mol_rest_port, $giper_baza_link], next?: null | $giper_baza_face_map): $giper_baza_face_map | null;
     }
 }
 
@@ -32694,149 +32837,6 @@ declare namespace $ {
 }
 
 declare namespace $ {
-    class $mol_rest_port_ws extends $mol_rest_port {
-    }
-}
-
-declare namespace $ {
-    class $mol_rest_message extends $mol_object {
-        port: $mol_rest_port;
-        method(): string;
-        uri(): URL;
-        type(): $mol_rest_port_mime;
-        origin(): string;
-        address(): string;
-        protocols(): readonly string[];
-        data(): null | string | Uint8Array<ArrayBuffer> | Element | object;
-        bin(): Uint8Array<ArrayBuffer>;
-        text(): string;
-        reply(data: null | string | Uint8Array<ArrayBuffer> | Element | object, meta?: {
-            type?: $mol_rest_port_mime;
-            code?: $mol_rest_code;
-        }): void;
-        route(uri: URL): $mol_rest_message;
-        derive(method: string, data: null | string | Uint8Array<ArrayBuffer> | Element | object, type?: $mol_rest_port_mime): $mol_rest_message;
-        static make<This extends typeof $mol_object>(this: This, config: Partial<InstanceType<This>>): InstanceType<This>;
-    }
-}
-
-declare namespace $ {
-    class $mol_rest_message_http extends $mol_rest_message {
-        input: InstanceType<$node['http']['IncomingMessage']>;
-        method(): string;
-        uri(): URL;
-        type(): $mol_rest_port_mime;
-        origin(): string;
-        address(): string;
-        protocols(): string[];
-        data(): null | string | Uint8Array<ArrayBuffer> | Element | object;
-        route(uri: URL): $mol_rest_message_http;
-    }
-}
-
-declare namespace $ {
-    enum $mol_websocket_frame_op {
-        con = 0,
-        txt = 1,
-        bin = 2,
-        stop = 8,
-        ping = 9,
-        pong = 10
-    }
-    /**
-     * WebSocket frame header.
-     * https://datatracker.ietf.org/doc/html/rfc6455#section-5.2
-     * Payload >= 2^32 isn't supported
-     */
-    class $mol_websocket_frame extends $mol_buffer {
-        /** Kind of socket frame. */
-        kind(next?: {
-            op: keyof typeof $mol_websocket_frame_op;
-            fin: boolean;
-        }): {
-            op: keyof typeof $mol_websocket_frame_op;
-            fin: boolean;
-        } | {
-            op: "stop" | "con" | "txt" | "bin" | "ping" | "pong";
-            fin: number;
-        };
-        /** Payload info. */
-        data(next?: {
-            size: number;
-            mask: boolean;
-        }): {
-            size: number;
-            mask: boolean;
-        } | {
-            size: number;
-            mask: number;
-        };
-        /** Header size (2..14). */
-        size(): number;
-        /** 4 byte mask. */
-        mask(): Uint8Array<ArrayBuffer>;
-        toString(): string;
-        static make(op: keyof typeof $mol_websocket_frame_op, size?: number, mask?: boolean, fin?: boolean): $mol_websocket_frame;
-    }
-}
-
-declare namespace $ {
-    class $mol_rest_port_ws_std extends $mol_rest_port_ws {
-        socket: WebSocket;
-        origin(): string;
-        send_nil(): void;
-        send_bin(data: Uint8Array<ArrayBuffer>): void;
-        send_text(data: string): void;
-    }
-}
-
-declare namespace $ {
-    class $mol_rest_port_ws_node extends $mol_rest_port_ws {
-        prolog: InstanceType<$node['http']['IncomingMessage']>;
-        socket: InstanceType<$node['stream']['Duplex']>;
-        upgrade(): $mol_rest_message_http;
-        origin(): string;
-        address(): string;
-        send_nil(): void;
-        send_bin(data: Uint8Array<ArrayBuffer>): void;
-        send_text(data: string): void;
-    }
-}
-
-declare namespace $ {
-    /** Glob synchronizer */
-    class $giper_baza_yard extends $mol_object {
-        /** Whole global graph database which contains Lands */
-        glob(): $giper_baza_glob;
-        lands_news: $mol_wire_set<string>;
-        static masters_default: string[];
-        static masters(): string[];
-        master_cursor(next?: number): number;
-        master_current(): string;
-        master_next(): void;
-        reconnects(reset?: null): number;
-        master(): $mol_rest_port | null;
-        slaves: $mol_wire_set<$mol_rest_port>;
-        sync(): void;
-        sync_news(): void;
-        sync_port(): void;
-        sync_port_lands(port: $mol_rest_port): void;
-        ports(): $mol_rest_port[];
-        masters(): $mol_rest_port[];
-        port_lands_active(port: $mol_rest_port): $mol_wire_set<string>;
-        port_lands_passive(port: $mol_rest_port): Set<string>;
-        lands_alive(): $giper_baza_land[];
-        port_income(port: $mol_rest_port, msg: Uint8Array<ArrayBuffer>): void;
-        face_port_sync(port: $mol_rest_port, income: $giper_baza_pack_parts): void;
-        sync_land(land: $giper_baza_link): void;
-        forget_land(land: $giper_baza_land): void;
-        sync_port_land([port, land]: [$mol_rest_port, $giper_baza_link]): void;
-        init_port_land([port, land]: [$mol_rest_port, $giper_baza_link]): void;
-        face_port_land([port, land]: [$mol_rest_port, $giper_baza_link], next?: null | $giper_baza_face_map): $giper_baza_face_map | null;
-    }
-}
-
-declare namespace $ {
     class $mol_rest_resource extends $mol_object {
         REQUEST(msg: $mol_rest_message): any;
         _protocols: readonly string[];
@@ -36232,20 +36232,6 @@ declare namespace $ {
 }
 
 declare namespace $ {
-    /**
-     * Рабочие baza-мастера экосистемы bog. Bundled seed (`giper/baza/dump.baza`)
-     * помнит в том числе мёртвые адреса, поэтому актуальные добавляем явно —
-     * виджет отзывов должен работать в любом приложении без своего boot-кода.
-     *
-     * Имя мастера привязано к IP по схеме `<owner>-<country>-<size>.<IP>.ip.giper.dev`.
-     * Серверы переименованы 25.08.2026, и на 87.120 перед Базой стоит SNI-relay:
-     * запрос с НЕИЗВЕСТНЫМ именем уезжает на подставной сайт и отдаёт чужой
-     * сертификат. Поэтому старое имя `baza.87.120.36.150.ip.giper.dev` не просто
-     * мертво — оно роняет TLS-рукопожатие WebSocket'а, и клиент висит на реконнектах.
-     */
-    export const $bog_feedback2_masters: string[];
-    /** @deprecated Один мастер мало, бери весь список. */
-    export const $bog_feedback2_master: string;
     /**
      * Ленд-реестр: feedback_id → ссылка на ленд с отзывами этого проекта.
      * Пресет `[null, post('just')]` — ленд нового проекта заводит первый
