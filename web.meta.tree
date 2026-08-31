@@ -100,6 +100,7 @@
 	pack eve git \https://github.com/b-on-g/eve.git
 	pack merch git \https://github.com/b-on-g/merch.git
 	pack tox git \https://github.com/b-on-g/tox.git
+	pack sert git \https://github.com/b-on-g/sert.git
 \/giper
 	pack balls git \https://github.com/giper-dev/balls.git
 	pack baza git \https://github.com/giper-dev/baza.git
