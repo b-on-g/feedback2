@@ -7,18 +7,6 @@ namespace $ {
 
 		margin: [0, 'auto'],
 
-		Waiting: {
-			padding: $mol_gap.block,
-			textAlign: 'center',
-			opacity: 0.5,
-			animation: {
-				name: 'bog_feedback2_form_pulse',
-				duration: '1.5s',
-				iterationCount: 'infinite',
-				timingFunction: 'ease-in-out',
-			},
-		},
-
 		Prompt: {
 			padding: $mol_gap.block,
 		},

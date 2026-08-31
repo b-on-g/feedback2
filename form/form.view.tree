@@ -1,7 +1,7 @@
 $bog_feedback2_form $mol_page
 	Head null
 	feedback_id \
-	registry_link \c0FEYfG8_tUFJEKfo
+	registry_link \
 	title @ \Feedback ( one per user )
 	tools /
 		<= Close null
@@ -46,5 +46,3 @@ $bog_feedback2_form $mol_page
 									click? <=> entry_row_reply_toggle*? null
 	Not_configured $mol_status
 		message @ \Form not yet configured
-	Waiting $mol_paragraph
-		title <= waiting_title @ \Waiting…

@@ -1,0 +1,25 @@
+name: $bog_feedback2
+
+permissions: write-all
+
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    # Собираем дашборд; виджет $bog_feedback2_form приезжает как его зависимость.
+    - uses: hyoo-ru/mam_build@master2
+      with:
+        package: 'bog/feedback2'
+        modules: 'board'
+
+    - uses: hyoo-ru/gh-deploy@v4.4.1
+      if: github.ref == 'refs/heads/main'
+      with:
+        folder: 'bog/feedback2/board/-'

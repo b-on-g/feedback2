@@ -1,0 +1,56 @@
+$bog_feedback2_board $mol_book2
+	registry_link \
+	plugins /
+		<= Theme $mol_theme_auto
+	pages /
+		<= Menu $mol_page
+			title @ \Feedback board
+			tools /
+				<= Status $giper_baza_status
+			body <= menu_body /
+				<= Projects $mol_list
+					rows <= project_rows /
+						<= Project_link*0 $mol_link
+							arg * project <= project_id* \
+							sub /
+								<= Project_name* $mol_paragraph
+									title <= project_name* \
+								<= Project_note* $mol_paragraph
+									title <= project_note* \
+			foot /
+				<= Registry_note $mol_paragraph
+					title <= registry_note \
+		<= Project $bog_feedback2_board_project
+			project_id <= project \
+			land_links <= project_land_links /
+	Projects_empty $mol_paragraph
+		title @ \No projects registered yet
+	Placeholder $mol_paragraph
+		title @ \Pick a project on the left
+
+$bog_feedback2_board_project $mol_page
+	project_id \
+	land_links /
+	title <= project_id
+	tools /
+		<= Close $mol_link
+			arg * project null
+			sub /
+				<= Close_icon $mol_icon_close
+	body <= project_body /
+		<= Entries $mol_list
+			rows <= entry_rows /
+				<= Entry*0 $mol_section
+					title <= entry_title* \
+					content <= entry_content* /
+						<= Entry_text* $mol_text
+							text <= entry_text* \
+						<= Entry_reply* $mol_text
+							text <= entry_reply* \
+	foot /
+		<= Lands_note $mol_paragraph
+			title <= lands_note \
+	Entries_empty $mol_paragraph
+		title @ \No feedback yet
+	Lands_missing $mol_paragraph
+		title @ \This project has no feedback land yet
