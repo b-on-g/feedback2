@@ -1,0 +1,10 @@
+{
+	"name": "bog_feedback2_board",
+	"short_name": "bog_feedback2_board",
+	"description": "",
+	"id": "bog_feedback2_board",
+	"start_url": ".",
+	"display": "standalone",
+	"background_color": "#000000",
+	"theme_color": "#000000"
+}
