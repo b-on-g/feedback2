@@ -22136,12 +22136,10 @@ var $;
         Placeholder: {
             color: $mol_theme.shade,
             flex: {
-                grow: 0,
+                grow: 1,
+                shrink: 1,
+                basis: '20rem',
             },
-            align: {
-                self: 'center',
-            },
-            margin: 'auto',
             padding: $mol_gap.block,
         },
         Projects_empty: {
