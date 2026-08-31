@@ -3,11 +3,21 @@ namespace $.$$ {
 	// Дашборд ничего не пишет и живёт на gh-pages, где собственный origin мастером
 	// быть не может. Ставим прод-мастера первыми, чтобы не жечь провальный реконнект
 	// на каждом открытии. Пиры из bundled seed остаются запасным вариантом.
+	//
+	// `#!master=<url>` прибивает дашборд к одному узлу — так проверяется, что
+	// именно доехало до конкретного мастера. Хеш читаем регуляркой, а не
+	// $mol_state_arg: это уровень модуля, фибры тут ещё нет.
+	const master_pin = /[#&!]master=([^&]+)/.exec(
+		$mol_dom_context.location?.hash ?? ''
+	)?.[ 1 ]
+
 	$giper_baza_yard.masters_default.splice(
 		0,
 		$giper_baza_yard.masters_default.length,
-		... $bog_feedback2_masters,
+		... master_pin ? [ decodeURIComponent( master_pin ) ] : $bog_feedback2_masters,
 	)
+
+	if( master_pin ) $giper_baza_yard.masters = ()=> [ decodeURIComponent( master_pin ) ]
 
 	/** Реестр: feedback_id → ссылка на ленд с отзывами. */
 	const Registry_dict = $giper_baza_dict_to( $giper_baza_atom_text )
