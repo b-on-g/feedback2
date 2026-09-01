@@ -21917,15 +21917,38 @@ var $;
 (function ($) {
     var $$;
     (function ($$) {
+        /**
+         * Пин мастера из адреса: `#!master=cmyser-ru-mule.91.188.212.151.ip.giper.dev`.
+         *
+         * Хеш $mol режет по `/`, поэтому полный URL в нём не выживает: `https://host`
+         * возвращается как `https:/host`, а такой огрызок WebSocket трактует как
+         * ОТНОСИТЕЛЬНЫЙ путь и «успешно» коннектится к origin страницы — статус зелёный,
+         * данных нет. Поэтому склеиваем обратно всё, что не похоже на следующий аргумент,
+         * и сами дописываем схему. Писать проще всего просто хост.
+         */
+        function master_pinned() {
+            const parts = ($mol_dom_context.location?.hash ?? '').replace(/^#!?/, '').split('/');
+            const start = parts.findIndex(part => part.startsWith('master='));
+            if (start < 0)
+                return '';
+            let raw = parts[start].slice('master='.length);
+            for (let i = start + 1; i < parts.length && !/^\w+=/.test(parts[i]); ++i) {
+                raw += '/' + parts[i];
+            }
+            const val = decodeURIComponent(raw).trim();
+            if (!val)
+                return '';
+            const scheme = /^([a-z]+):\/*(.+)$/i.exec(val);
+            const rest = (scheme ? scheme[2] : val).replace(/\/+$/, '');
+            return `${scheme ? scheme[1] : 'https'}://${rest}/`;
+        }
         // Мастера дашборд себе не назначает: берёт их из bundled seed, как любое
-        // приложение на Базе. `#!master=<url>` прибивает к одному узлу — так видно,
-        // что реально доехало именно туда (мастера между собой не реплицируются).
-        // Хеш читаем регуляркой, а не $mol_state_arg: это уровень модуля, фибры тут нет.
-        const master_pin = /[#&!]master=([^&]+)/.exec($mol_dom_context.location?.hash ?? '')?.[1];
+        // приложение на Базе. Пин нужен, чтобы увидеть, что доехало именно на этот
+        // узел — мастера между собой не реплицируются.
+        const master_pin = master_pinned();
         if (master_pin) {
-            const master = decodeURIComponent(master_pin);
             $giper_baza_yard.masters_default.length = 0;
-            $giper_baza_yard.masters = () => [master];
+            $giper_baza_yard.masters = () => [master_pin];
         }
         /** Реестр: feedback_id → ссылка на ленд с отзывами. */
         const Registry_dict = $giper_baza_dict_to($giper_baza_atom_text);
@@ -22012,8 +22035,19 @@ var $;
             project_land_links() {
                 return this.land_links(this.project());
             }
+            /** Куда реально подключены. Пин легко промахивается, глазами не проверить. */
+            master_note() {
+                const master = this.$.$giper_baza_glob.yard().master_current();
+                if (!master)
+                    return 'мастер не выбран';
+                return `мастер ${master.replace(/^\w+:\/\//, '').replace(/\/$/, '')}`;
+            }
             registry_note() {
-                return `реестр ${this.registry_link()} · проектов: ${this.project_ids().length}`;
+                return [
+                    `реестр ${this.registry_link()}`,
+                    `проектов: ${this.project_ids().length}`,
+                    this.master_note(),
+                ].join(' · ');
             }
         }
         __decorate([

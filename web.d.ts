@@ -42051,7 +42051,7 @@ declare namespace $.$$ {
             items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
             splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
             find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
-            has(vary: $giper_baza_vary_type, next?: boolean, tag?: keyof typeof $giper_baza_unit_sand_tag): boolean;
+            has(vary: $giper_baza_vary_type, next?: boolean, tag?: keyof typeof $giper_baza_unit_sand_tag /** Тот же реестр, что у виджета; `?registry=<link>` смотрит в чужой. */): boolean;
             add(vary: $giper_baza_vary_type, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
             cut(vary: $giper_baza_vary_type): void;
             move(from: number, to: number): void;
@@ -42102,6 +42102,8 @@ declare namespace $.$$ {
         land_links(project_id: string): readonly string[];
         entries_count(land_link: string): number;
         project_land_links(): readonly string[];
+        /** Куда реально подключены. Пин легко промахивается, глазами не проверить. */
+        master_note(): string;
         registry_note(): string;
     }
     class $bog_feedback2_board_project extends $.$bog_feedback2_board_project {
@@ -42114,7 +42116,7 @@ declare namespace $.$$ {
             items_vary(next?: readonly $giper_baza_vary_type[], tag?: keyof typeof $giper_baza_unit_sand_tag): readonly $giper_baza_vary_type[];
             splice(next: readonly $giper_baza_vary_type[], from?: number, to?: number, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
             find(vary: $giper_baza_vary_type): $giper_baza_unit_sand | null;
-            has(vary: $giper_baza_vary_type, next?: boolean, tag?: keyof typeof $giper_baza_unit_sand_tag): boolean;
+            has(vary: $giper_baza_vary_type, next?: boolean, tag?: keyof typeof $giper_baza_unit_sand_tag /** Тот же реестр, что у виджета; `?registry=<link>` смотрит в чужой. */): boolean;
             add(vary: $giper_baza_vary_type, tag?: keyof typeof $giper_baza_unit_sand_tag): void;
             cut(vary: $giper_baza_vary_type): void;
             move(from: number, to: number): void;
